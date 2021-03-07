@@ -7,13 +7,13 @@ import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 //import ch.heigvd.labo.command.Build;
 //import ch.heigvd.labo.command.Clean;
-//import ch.heigvd.labo.command.New;
+import ch.heigvd.labo.command.New;
 //import ch.heigvd.labo.command.Serve;
 
 @Command(
         name="Main",
         description = "New picocli command" //,
-        /**subcommands = {New.class, Clean.class, Build.class, Serve.class} */ )
+        /*subcommands = {New.class, Clean.class, Build.class, Serve.class}*/  )
 
 public class Main implements Callable<Integer>{
 
