@@ -6,7 +6,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 //import ch.heigvd.labo.command.Build;
-//import ch.heigvd.labo.command.Clean;
+import ch.heigvd.labo.command.Clean;
 import ch.heigvd.labo.command.New;
 //import ch.heigvd.labo.command.Serve;
 
