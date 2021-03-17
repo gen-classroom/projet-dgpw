@@ -1,8 +1,10 @@
 package ch.heigvd.labo.command;
+import static org.junit.jupiter.api.Assertions.*;
 
-import static org.junit.Assert.assertTrue;
-
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import picocli.CommandLine;
 
 public class BuildTest {
     /**
