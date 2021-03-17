@@ -8,6 +8,13 @@ import org.junit.jupiter.api.Test;
 import picocli.CommandLine;
 
 public class MainTest {
+    private final ByteArrayOutputStream output = new ByteArrayOutputStream();
+
+    @BeforeEach
+    void setUp() {
+        System.setOut(new PrintStream(output));
+    }
+
     /**
      * Rigorous Test :-)
      */
@@ -15,5 +22,12 @@ public class MainTest {
     public void shouldAnswerWithTrue()
     {
         assertTrue( true );
+    }
+
+    @Test
+    public void shouldDisplayVersion(){
+        String strSouhaite = "DGPW version";
+        new CommandLine(new Main()).execute("-v");
+        assertTrue(output.toString().contains(strSouhaite));
     }
 }
