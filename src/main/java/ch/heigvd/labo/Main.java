@@ -10,6 +10,7 @@ import ch.heigvd.labo.command.Clean;
 import ch.heigvd.labo.command.New;
 import ch.heigvd.labo.command.Serve;
 
+
 @Command(
         name="Main",
         description = "Programme DGPW - Website Generator" ,
@@ -27,11 +28,14 @@ public class Main implements Callable<Integer>{
 
     @Override
     public Integer call() throws Exception{
-        if(version)
-            System.out.println("DGPW version " + CommandLine.VERSION);
-        else {
+        if(version) {
+            //Affichage de la version de notre application contenue dans pom.xml
+            System.out.println("DGPW version " + Main.class.getPackage().getImplementationVersion());
+        }
+        else{
             CommandLine.usage(this, System.out);
         }
+
         return 0;
     }
 
