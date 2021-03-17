@@ -16,7 +16,6 @@ import ch.heigvd.labo.command.Serve;
         description = "Programme DGPW - Website Generator" ,
         subcommands = {New.class, Clean.class, Build.class, Serve.class} )
 
-
 public class Main implements Callable<Integer>{
     @Option(names = { "--version", "-v" }, description = "Display the version and exit")
     private boolean version;
@@ -35,7 +34,6 @@ public class Main implements Callable<Integer>{
         else{
             CommandLine.usage(this, System.out);
         }
-
         return 0;
     }
 
