@@ -9,12 +9,12 @@ import ch.heigvd.labo.command.Build;
 import ch.heigvd.labo.command.Clean;
 import ch.heigvd.labo.command.New;
 import ch.heigvd.labo.command.Serve;
-
+import ch.heigvd.labo.command.Init;
 
 @Command(
         name="Main",
         description = "Programme DGPW - Website Generator" ,
-        subcommands = {New.class, Clean.class, Build.class, Serve.class} )
+        subcommands = {New.class, Clean.class, Build.class, Serve.class, Init.class} )
 
 
 public class Main implements Callable<Integer>{
