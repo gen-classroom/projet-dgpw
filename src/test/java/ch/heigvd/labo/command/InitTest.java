@@ -10,11 +10,18 @@ import java.io.IOException;
 import java.nio.file.Files;
 import org.apache.commons.io.FileUtils;
 
+
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class InitTest {
     private final ByteArrayOutputStream output = new ByteArrayOutputStream();
 
+    /**
+     * Test de la création d'un répértoire qui n'existe pas dans le projet
+     * @throws Exception
+     */
     @Test
-    void shouldNotCreateRepertory() throws Exception {
+    @Order(1)
+    void shouldCreateRepertory() throws Exception {
         int exitCode = new CommandLine(new Init()).execute("test_init");
         assertEquals(exitCode, 0);
         assertThrows(Exception.class, () -> {
@@ -22,8 +29,13 @@ public class InitTest {
         });
     }
 
+    /**
+     * Test de la création d'un répertoire qui existe déjà, la création doit échouer
+     * @throws Exception
+     */
     @Test
-    void shouldCreateRepertory() throws Exception {
+    @Order(2)
+    void shouldNotCreateRepertory() throws Exception {
         int exitCode = new CommandLine(new Init()).execute("test_init");
         assertEquals(exitCode, 1);
         assertThrows(Exception.class, () -> {
@@ -31,9 +43,13 @@ public class InitTest {
         });
     }
 
+    /**
+     * Une fois les tests terminés, le répertoire servant de test est supprimé
+     * afin de ne pas surcharger le projet
+     */
     @AfterAll
     static void cleanRepertoryTest(){
-        File dir = new File("test_init");
+        File dir = new File("www/test_init");
         try {
             FileUtils.deleteDirectory(dir);
         } catch (IOException e) {
