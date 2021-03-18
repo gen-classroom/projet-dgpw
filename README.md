@@ -37,5 +37,12 @@ Commands:
   clean  Clean .... ???
   build  Build .... ???
   serve  Serve .... ???
+  init   Initialise un répertoire de site statique
 ````
+------
 
+Pour initialiser le site statique :
+
+````bash
+dgpw init test_unit
+````
