@@ -8,8 +8,6 @@
 
 **Etat du projet : En cours**
 
-
-
 ------
 
 Pour générer et unzip le projet :
@@ -29,9 +27,10 @@ Executer `dgpw`:
 ````bash
 > dgpw
 
-#Affichage application
-Usage: Main [COMMAND]
-New picocli command
+# Affichage
+Usage: Main [-v] [COMMAND]
+Programme DGPW - Website Generator
+  -v, --version   Display the version and exit
 Commands:
   new    New .... ???
   clean  Clean .... ???
@@ -41,8 +40,22 @@ Commands:
 ````
 ------
 
+Pour afficher la version:
+
+````bash
+> dgpw -v
+
+# Affichage
+DGPW version 0.1.0-SNAPSHOT
+````
+
 Pour initialiser le site statique :
 
 ````bash
-dgpw init test_unit
+> dgpw init test_unit
+
+# Affichage
+Le répertoire a été créé 
 ````
+
+Afin d'avoir un projet organisé, le site statique est automatiquement créé dans le répertoire `www/`. Lorsque l'utilisateur souhaite créer un dossier `/mon/site` par exemple, le répertoire se présentera ansi: `www/mon/site`.
