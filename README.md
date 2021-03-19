@@ -33,7 +33,7 @@ Programme DGPW - Website Generator
   -v, --version   Display the version and exit
 Commands:
   new    New .... ???
-  clean  Clean .... ???
+  clean  Nettoie le répertoire build du site statique.
   build  Build .... ???
   serve  Serve .... ???
   init   Initialise un répertoire de site statique
