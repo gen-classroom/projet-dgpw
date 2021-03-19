@@ -8,17 +8,17 @@ import org.apache.commons.io.FileUtils;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
-@Command(name = "clean", description ="Nettoie le répertoire build du site statique")
+@Command(name = "clean", description ="Nettoie le répertoire build du site statique.")
 public class Clean implements Callable<Integer> {
     static final String DIR_TO_REMOVE = "/build";
 
-    @CommandLine.Parameters(paramLabel = "FILE", description = "Chemin du répertoire du site statique à nettoyer")
+    @CommandLine.Parameters(paramLabel = "FILE", description = "Chemin du répertoire du site statique à nettoyer.")
     File dir;
 
     @Override public Integer call(){
         //Vérifie que le répertoire du site est existant
         if (!dir.exists()) {
-            System.out.format("Impossible d'accéder au répertoire %s. Celui-ci est inexistant\n",dir.getName());
+            System.out.format("Impossible d'accéder au répertoire %s. Celui-ci est inexistant.\n",dir.getName());
             return 1;
         }
 
@@ -26,7 +26,7 @@ public class Clean implements Callable<Integer> {
 
         //Vérifie que le répertoire a supprimé est existant
         if(!dirToRemove.exists()){
-            System.out.format("Impossible de supprimer %s. Celui-ci est inexistant\n",dirToRemove.getName());
+            System.out.format("Impossible de supprimer %s. Celui-ci est inexistant.\n",dirToRemove.getName());
             return 2;
         }
 
@@ -37,7 +37,7 @@ public class Clean implements Callable<Integer> {
             e.printStackTrace();
         }
 
-        System.out.println("Le répertoire a été supprimé.");
+        System.out.format("Le répertoire build du site %s a été supprimé.",dir.getName());
         return 0;
     }
 }
