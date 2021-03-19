@@ -30,4 +30,11 @@ public class MainTest {
         new CommandLine(new Main()).execute("-v");
         assertTrue(output.toString().contains(strSouhaite));
     }
+
+    @Test
+    public void shouldDisplayVersion2(){
+        String strSouhaite = "DGPW version";
+        new CommandLine(new Main()).execute("--version");
+        assertTrue(output.toString().contains(strSouhaite));
+    }
 }
