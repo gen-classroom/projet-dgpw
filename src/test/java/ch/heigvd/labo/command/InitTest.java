@@ -44,34 +44,6 @@ public class InitTest {
     }
 
     /**
-     * Test de la création d'un fichier de configuration qui n'existe pas dans le répertoire
-     * @throws Exception
-     */
-    @Test
-    @Order(3)
-    void shouldCreateConfigFile() throws Exception {
-        int exitCode = new CommandLine(new Init()).execute("test_init");
-        assertEquals(exitCode, 0);
-        assertThrows(Exception.class, () -> {
-            throw new Exception();
-        });
-    }
-
-    /**
-     * Test de la création d'un fichier de configuration qui existe déjà, la création doit échouer
-     * @throws Exception
-     */
-    @Test
-    @Order(4)
-    void shouldNotCreateConfigFile() throws Exception {
-        int exitCode = new CommandLine(new Init()).execute("test_init");
-        assertEquals(exitCode, 1);
-        assertThrows(Exception.class, () -> {
-            throw new Exception();
-        });
-    }
-
-    /**
      * Une fois les tests terminés, le répertoire servant de test est supprimé
      * afin de ne pas surcharger le projet
      */
