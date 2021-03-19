@@ -16,7 +16,7 @@ public class InitTest {
     private final ByteArrayOutputStream output = new ByteArrayOutputStream();
 
     /**
-     * Test de la création d'un répértoire qui n'existe pas dans le projet
+     * Test de la création d'un répertoire qui n'existe pas dans le projet
      * @throws Exception
      */
     @Test
@@ -36,6 +36,34 @@ public class InitTest {
     @Test
     @Order(2)
     void shouldNotCreateRepertory() throws Exception {
+        int exitCode = new CommandLine(new Init()).execute("test_init");
+        assertEquals(exitCode, 1);
+        assertThrows(Exception.class, () -> {
+            throw new Exception();
+        });
+    }
+
+    /**
+     * Test de la création d'un fichier de configuration qui n'existe pas dans le répertoire
+     * @throws Exception
+     */
+    @Test
+    @Order(3)
+    void shouldCreateConfigFile() throws Exception {
+        int exitCode = new CommandLine(new Init()).execute("test_init");
+        assertEquals(exitCode, 0);
+        assertThrows(Exception.class, () -> {
+            throw new Exception();
+        });
+    }
+
+    /**
+     * Test de la création d'un fichier de configuration qui existe déjà, la création doit échouer
+     * @throws Exception
+     */
+    @Test
+    @Order(4)
+    void shouldNotCreateConfigFile() throws Exception {
         int exitCode = new CommandLine(new Init()).execute("test_init");
         assertEquals(exitCode, 1);
         assertThrows(Exception.class, () -> {

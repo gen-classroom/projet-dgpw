@@ -26,7 +26,15 @@ public class Init implements Callable<Integer> {
             // Création du fichier de configuration
             try {
                 File conf = new File(dir + "/config.yaml");
-                boolean created = conf.createNewFile();
+                boolean created = false;
+
+                // Si le fichier de config existe deja, on ne le recrée pas
+                if (conf.exists()) {
+                    System.out.println("le fichier de configuration existe déjà");
+                    return 0;
+                } else {
+                    created = conf.createNewFile();
+                }
 
                 if (created) {
                     System.out.println("Le fichier de config a été créé : " + conf.getAbsolutePath());
