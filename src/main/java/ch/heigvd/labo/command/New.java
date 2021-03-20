@@ -14,7 +14,6 @@ import picocli.CommandLine.Parameters;
 public class New implements Callable<Integer> {
 
     private final String DIR_RACINE = "www/";
-    private String metaPath = "";
     private final String TEMPLATE = "<!--Template pour une page, à modifier comme vous" +
             " le souhaiter ! (format Markdown) \n" +
             "Syntaxe utile: \n *italique*\n **gras**\n tableau 2 lignes 2 colonnes:\n" +
@@ -27,7 +26,10 @@ public class New implements Callable<Integer> {
             "#TITRE 1\n" + "##TITRE 2\n" + "###TITRE 3\n" +
             "Contenu de l'article\n\n" + "![Une image](./image.png)\n";
 
+    private static String metaPath = "";
+
     @Override public Integer call() throws IOException {
+        metaPath = "";
         File dir = new File(DIR_RACINE);
         searchPath(dir);
 
@@ -42,24 +44,30 @@ public class New implements Callable<Integer> {
             // Création du nouveau fichier en .md
             File page = new File(metaPath + "/" + file.getName() + ".md");
             boolean isCreated = false;
-            isCreated = page.createNewFile();
+
+            if(page.exists()){
+                System.out.println("Le fichier existe déjà");
+                return 1;
+            } else {
+                isCreated = page.createNewFile();
+            }
 
             if(isCreated){
-                System.out.println("La page voulue, " + page.getName() + ", a été créé");
+                System.out.println("La page voulue, " + page.getName() + ", a été créée");
 
                 // Template d'une page
                 FileWriter writing = new FileWriter(page, true);
                 PrintWriter printing = new PrintWriter(writing);
                 printing.append(TEMPLATE);
                 printing.close();
+
             } else {
-                System.out.println("Le fichier n'a pas pu être créé");
+                System.out.println("Erreur, le fichier n'a pas pu être créé");
                 return 1;
             }
         } catch (IOException e){
             e.printStackTrace();
         }
-
         return 0;
     }
     @CommandLine.Parameters(paramLabel = "FILE", description = "répertoire pour site statique")
@@ -73,7 +81,7 @@ public class New implements Callable<Integer> {
         File[] list = file.listFiles();
 
         if (list != null) {
-            if(list.length < 1) {
+            if(list.length < 1 || list[0].getName().contains(".md") && list[0].getParent().contains("metadonnee")) {
                 metaPath = file.getPath();
                 return;
             }
@@ -86,4 +94,11 @@ public class New implements Callable<Integer> {
         }
     }
 
+    /**
+     * Getter qui renvoie le chemin jusqu'au répertoire avec les métadonnées
+     * @return chemin www/mon/site/metadonnee
+     */
+    public String getMetaPath() {
+        return metaPath;
+    }
 }
