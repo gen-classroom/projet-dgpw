@@ -33,7 +33,7 @@ Programme DGPW - Website Generator
   -v, --version   Display the version and exit
 Commands:
   new    New .... ???
-  clean  Clean .... ???
+  clean  Nettoie le répertoire build du site statique.
   build  Build .... ???
   serve  Serve .... ???
   init   Initialise un répertoire de site statique
@@ -59,3 +59,15 @@ Le répertoire a été créé
 ````
 
 Afin d'avoir un projet organisé, le site statique est automatiquement créé dans le répertoire `www/`. Lorsque l'utilisateur souhaite créer un dossier `/mon/site` par exemple, le répertoire se présentera ansi: `www/mon/site`.
+
+Pour clean le site statique (supprimer le répertoire build) :
+
+```bash
+Exemple : dgpw clean <cheminDuSite>
+dgpw clean www/test_init
+
+# Affiche 
+le répertoire build a été supprimé
+```
+
+Le chemin complet du site statique doit être renseigné pour supprimer le répertoire build. Sans celui-ci, l'erreur Impossible d'accéder au répertoire <nom>. Celui-ci est inexistant.
