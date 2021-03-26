@@ -32,7 +32,7 @@ Usage: Main [-v] [COMMAND]
 Programme DGPW - Website Generator
   -v, --version   Display the version and exit
 Commands:
-  new    New .... ???
+  new    Création d'une nouvelle page
   clean  Nettoie le répertoire build du site statique.
   build  Build .... ???
   serve  Serve .... ???
@@ -64,10 +64,24 @@ Pour clean le site statique (supprimer le répertoire build) :
 
 ```bash
 Exemple : dgpw clean <cheminDuSite>
-dgpw clean www/test_init
+> dgpw clean www/test_init
 
 # Affiche 
 le répertoire build a été supprimé
 ```
 
 Le chemin complet du site statique doit être renseigné pour supprimer le répertoire build. Sans celui-ci, l'erreur Impossible d'accéder au répertoire <nom>. Celui-ci est inexistant.
+
+Afin de créer une nouvelle page avec la commande New:
+
+````bash
+Usage: Main new [-d=<dirStatic>] [-f=<filePage>]
+Création d'une nouvelle page
+  -d=<dirStatic>    Répertoire du site statique
+  -f=<filePage>     Nom de la page
+  
+> dgpw new -f mapremierepage -d test_init/
+
+# Affichage
+La page voulue, mapremierepage.md, a été créée
+````
