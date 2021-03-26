@@ -25,6 +25,15 @@ public class New implements Callable<Integer> {
 
     @Override public Integer call() throws IOException {
         if(dirStatic != null && filePage != null) {
+
+            path = DIR_RACINE + dirStatic.getPath();
+            File dirTest = new File(path);
+
+            if(!dirTest.exists()) {
+                System.out.println("Ce répertoire de site statique n'existe pas");
+                return 1;
+            }
+
             File dir = new File(DIR_RACINE + dirStatic.getPath() + "/metadonnee");
             path = dir.getPath();
 
