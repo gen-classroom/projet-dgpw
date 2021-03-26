@@ -15,7 +15,39 @@ public class NewTest {
 
     @Test
     @Order(1)
+    void shouldCreateErrorNoArgument() throws Exception {
+        int exitCode = new CommandLine(new New()).execute();
+        assertEquals(exitCode, 1);
+        assertThrows(Exception.class, () -> {
+            throw new Exception();
+        });
+    }
+
+    @Test
+    @Order(2)
+    void shouldCreateErrorOneArgument() throws Exception {
+        int exitCode = new CommandLine(new New()).execute("-f", "mapremierepage");
+        assertEquals(exitCode, 1);
+        assertThrows(Exception.class, () -> {
+            throw new Exception();
+        });
+    }
+
+    @Test
+    @Order(3)
+    void shouldCreateErrorDirDoesntExist() throws Exception {
+        int exitCode = new CommandLine(new New()).execute("-f", "mapremierepage", "-d" , "test/");
+        assertEquals(exitCode, 1);
+        assertThrows(Exception.class, () -> {
+            throw new Exception();
+        });
+    }
+
+    @Test
+    @Order(4)
     void shouldCreateFile() throws Exception {
+        File test = new File("www/mon/site/");
+        test.mkdirs();
         int exitCode = new CommandLine(new New()).execute("-f", "mapremierepage", "-d" , "mon/site/");
         assertEquals(exitCode, 0);
         assertThrows(Exception.class, () -> {
@@ -24,7 +56,7 @@ public class NewTest {
     }
 
     @Test
-    @Order(2)
+    @Order(5)
     void shouldNotCreateFile() throws Exception {
         int exitCode = new CommandLine(new New()).execute("-f", "mapremierepage", "-d" , "mon/site/");
         assertEquals(exitCode, 1);
@@ -34,18 +66,12 @@ public class NewTest {
     }
 
     @AfterAll
-    static void cleanRepertoryTest(){
-        New n = new New();
-        File dir = new File(n.getMetaPath() + "/mapremierepage.md");
-        if(!dir.delete())
-        {
-            System.out.println("Erreur de suppression du fichier");
-        }
-        dir = new File(n.getMetaPath());
-        if(!dir.delete())
-        {
-            System.out.println("Erreur de suppression du fichier");
+    static void cleanRepertoryTest() {
+        File dir = new File("www/mon");
+        try {
+            FileUtils.deleteDirectory(dir);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
-
 }
