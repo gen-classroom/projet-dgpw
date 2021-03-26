@@ -17,7 +17,7 @@ public class NewTest {
     @Order(1)
     void shouldCreateErrorNoArgument() throws Exception {
         int exitCode = new CommandLine(new New()).execute();
-        assertEquals(exitCode, 1);
+        assertEquals(exitCode, 0);
         assertThrows(Exception.class, () -> {
             throw new Exception();
         });
