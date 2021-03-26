@@ -5,10 +5,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.concurrent.Callable;
-import picocli.CommandLine;
+
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
-import picocli.CommandLine.Parameters;
+
+import static ch.heigvd.labo.Utility.*;
 
 
 @Command(name = "new", description ="Création d'une nouvelle page")
@@ -20,17 +21,6 @@ public class New implements Callable<Integer> {
     static File dirStatic;
 
     private final String DIR_RACINE = "www/";
-    private final String TEMPLATE = "<!--Template pour une page, à modifier comme vous" +
-            " le souhaiter ! (format Markdown) \n" +
-            "Syntaxe utile: \n *italique*\n **gras**\n tableau 2 lignes 2 colonnes:\n" +
-            "|      |      |\n" +
-            "| ---- | ---- |\n" +
-            "|      |      | \n" +
-            "`code` \n bloc de code: \n ````html \n une image (ne pas oublier de copier l'image dans le répértoire" +
-            " ../metadonnee/image.png:\n ![Description](./image.png)-->\n\n" +
-            "> titre:\n\n" + "> auteur:\n\n" + "> date:\n\n" + "-----\n" +
-            "#TITRE 1\n" + "##TITRE 2\n" + "###TITRE 3\n" +
-            "Contenu de l'article\n\n" + "![Une image](./image.png)\n";
     private static String path = "";
 
     @Override public Integer call() throws IOException {
@@ -61,7 +51,7 @@ public class New implements Callable<Integer> {
                     // Template d'une page
                     FileWriter writing = new FileWriter(page, true);
                     PrintWriter printing = new PrintWriter(writing);
-                    printing.append(TEMPLATE);
+                    printing.append(MD_TEMPLATE);
                     printing.close();
 
                 } else {
