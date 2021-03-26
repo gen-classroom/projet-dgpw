@@ -8,16 +8,12 @@ import java.util.concurrent.Callable;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
+import static ch.heigvd.labo.Utility.*;
 
 @Command(name = "init", description ="Initialise un répertoire de site statique")
 public class Init implements Callable<Integer> {
     // Répertoire racine de notre site statique
     static final String DIR_RACINE = "www/";
-    static final String YAML_TEMPLATE = "indexfile: #inserer nom de fichier index\n" +
-                                        "title:     #inserer titre du site\n" +
-                                        "sourcedir: #inserer repertoire source (probablement www/)\n" +
-                                        "datadir: .\n" +
-                                        "filesdir:  #inserer repertoire contenant les fichiers\n";
 
     @Override public Integer call() throws IOException {
         File dir = new File(DIR_RACINE + file.getPath());
@@ -48,6 +44,32 @@ public class Init implements Callable<Integer> {
                     FileWriter writing = new FileWriter(conf, true);
                     PrintWriter printing = new PrintWriter(writing);
                     printing.append(YAML_TEMPLATE);
+                    printing.close();
+
+                } else {
+                    System.out.println("Un problème a été rencontré et le fichier n'a pas été créé.");
+                    throw new IOException("La création du fichier de configuration a échoué.");
+                }
+
+                // Création du fichier index
+                conf = new File(dir + "/index.md");
+                created = false;
+
+                // Si le fichier de config existe deja, on ne le recrée pas
+                if (conf.exists()) {
+                    System.out.println("le fichier de configuration existe déjà");
+                    return 0;
+                } else {
+                    created = conf.createNewFile();
+                }
+
+                if (created) {
+                    System.out.println("Le fichier de config a été créé : " + conf.getAbsolutePath());
+
+                    // Ajout du template dans le fichier de config créé
+                    FileWriter writing = new FileWriter(conf, true);
+                    PrintWriter printing = new PrintWriter(writing);
+                    printing.append(MD_INDEX + MD_TEMPLATE);
                     printing.close();
 
                 } else {
