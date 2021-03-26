@@ -16,7 +16,7 @@ public class NewTest {
     @Test
     @Order(1)
     void shouldCreateFile() throws Exception {
-        int exitCode = new CommandLine(new New()).execute();
+        int exitCode = new CommandLine(new New()).execute("-f", "mapremierepage", "-d" , "mon/site/");
         assertEquals(exitCode, 0);
         assertThrows(Exception.class, () -> {
             throw new Exception();
