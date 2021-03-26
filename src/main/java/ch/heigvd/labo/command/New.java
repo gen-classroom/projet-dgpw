@@ -34,7 +34,7 @@ public class New implements Callable<Integer> {
                 return 1;
             }
 
-            File dir = new File(DIR_RACINE + dirStatic.getPath() + "/metadonnee");
+            File dir = new File(path + "/metadonnee");
             path = dir.getPath();
 
             if (!dir.mkdirs()) {
@@ -75,13 +75,5 @@ public class New implements Callable<Integer> {
             System.out.println("Les paramètres -f ou/et -d n'ont pas été précisés !");
             return 1;
         }
-    }
-
-    /**
-     * Getter qui renvoie le chemin jusqu'au répertoire avec les métadonnées
-     * @return chemin www/mon/site/metadonnee
-     */
-    public String getMetaPath() {
-        return path;
     }
 }
