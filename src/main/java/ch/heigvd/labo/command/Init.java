@@ -52,7 +52,7 @@ public class Init implements Callable<Integer> {
 
                 } else {
                     System.out.println("Un problème a été rencontré et le fichier n'a pas été créé.");
-                    throw new IOException("La création du fichier de configuration a échoué.")
+                    throw new IOException("La création du fichier de configuration a échoué.");
                 }
             }
             catch (IOException e) {
