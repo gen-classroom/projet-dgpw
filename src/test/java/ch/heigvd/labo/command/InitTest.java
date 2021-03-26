@@ -16,7 +16,7 @@ public class InitTest {
     private final ByteArrayOutputStream output = new ByteArrayOutputStream();
 
     /**
-     * Test de la création d'un répértoire qui n'existe pas dans le projet
+     * Test de la création d'un répertoire qui n'existe pas dans le projet
      * @throws Exception
      */
     @Test
