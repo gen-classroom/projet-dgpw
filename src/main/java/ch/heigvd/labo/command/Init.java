@@ -13,6 +13,11 @@ import picocli.CommandLine.Parameters;
 public class Init implements Callable<Integer> {
     // Répertoire racine de notre site statique
     static final String DIR_RACINE = "www/";
+    static final String YAML_TEMPLATE = "indexfile: #inserer nom de fichier index\n" +
+                                        "title:     #inserer titre du site\n" +
+                                        "sourcedir: #inserer repertoire source (probablement www/)\n" +
+                                        "datadir: .\n" +
+                                        "filesdir:  #inserer repertoire contenant les fichiers\n";
 
     @Override public Integer call() throws IOException {
         File dir = new File(DIR_RACINE + file.getPath());
@@ -42,11 +47,7 @@ public class Init implements Callable<Integer> {
                     // Ajout du template dans le fichier de config créé
                     FileWriter writing = new FileWriter(conf, true);
                     PrintWriter printing = new PrintWriter(writing);
-                    printing.append("indexfile: #inserer nom de fichier index\n" +
-                            "title: #inserer titre \n" +
-                            "sourcedir:#inserer repertoire source\n" +
-                            "datadir:.\n" +
-                            "filesdir:#inserer repertoire fichiers\n");
+                    printing.append(YAML_TEMPLATE);
                     printing.close();
 
                 } else {
