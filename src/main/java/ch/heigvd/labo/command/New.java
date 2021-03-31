@@ -20,7 +20,6 @@ public class New implements Callable<Integer> {
     @Option(names = "-d", description = "Répertoire du site statique")
     static File dirStatic;
 
-    private final String DIR_RACINE = "www/";
     private static String path = "";
 
     @Override public Integer call() throws IOException {
@@ -29,11 +28,14 @@ public class New implements Callable<Integer> {
             path = DIR_RACINE + dirStatic.getPath();
             File dirTest = new File(path);
 
+            // L'utilisateur doit préciser en paramètres le répertoire du site statique, s'il n'existe pas
+            // on retourne une erreur
             if(!dirTest.exists()) {
                 System.out.println("Ce répertoire de site statique n'existe pas");
                 return 1;
             }
 
+            // On ajoute un répertoire "metadonnee" où toute les métadonnées seront stockées dedans
             File dir = new File(path + "/metadonnee");
             path = dir.getPath();
 
@@ -47,6 +49,7 @@ public class New implements Callable<Integer> {
                 File page = new File(path + "/" + filePage.getName() + ".md");
                 boolean isCreated = false;
 
+                // Si la page existe déjà, on retourne une erreur
                 if (page.exists()) {
                     System.out.println("Le fichier existe déjà");
                     return 1;
@@ -57,7 +60,7 @@ public class New implements Callable<Integer> {
                 if (isCreated) {
                     System.out.println("La page voulue, " + page.getName() + ", a été créée");
 
-                    // Template d'une page
+                    // Template d'une page, on écrit directement dans le fichier
                     FileWriter writing = new FileWriter(page, true);
                     PrintWriter printing = new PrintWriter(writing);
                     printing.append(MD_TEMPLATE);
@@ -70,6 +73,7 @@ public class New implements Callable<Integer> {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
             return 0;
         } else {
             System.out.println("Les paramètres -f ou/et -d n'ont pas été précisés !");

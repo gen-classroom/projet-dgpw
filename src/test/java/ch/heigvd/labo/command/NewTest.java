@@ -13,6 +13,10 @@ import java.io.IOException;
 public class NewTest {
     private final ByteArrayOutputStream output = new ByteArrayOutputStream();
 
+    /**
+     * Test qui n'a aucun argument en paramètres, la commande retourne une erreur
+     * @throws Exception
+     */
     @Test
     @Order(1)
     void shouldCreateErrorNoArgument() throws Exception {
@@ -23,6 +27,10 @@ public class NewTest {
         });
     }
 
+    /**
+     * Test qui prend en paramètres un seul argument, il devrait prendre deux arguments normalement
+     * @throws Exception
+     */
     @Test
     @Order(2)
     void shouldCreateErrorOneArgument() throws Exception {
@@ -33,6 +41,10 @@ public class NewTest {
         });
     }
 
+    /**
+     * Test qui prend en paramètre un répertoire du site statique qui n'existe pas
+     * @throws Exception
+     */
     @Test
     @Order(3)
     void shouldCreateErrorDirDoesntExist() throws Exception {
@@ -43,6 +55,10 @@ public class NewTest {
         });
     }
 
+    /**
+     * Test qui crée la page correctement
+     * @throws Exception
+     */
     @Test
     @Order(4)
     void shouldCreateFile() throws Exception {
@@ -55,6 +71,10 @@ public class NewTest {
         });
     }
 
+    /**
+     * Test qui ne devrait pas recréer une page car elle existe déjà, une erreur est retournée
+     * @throws Exception
+     */
     @Test
     @Order(5)
     void shouldNotCreateFile() throws Exception {
@@ -65,6 +85,10 @@ public class NewTest {
         });
     }
 
+    /**
+     * Après que tous les tests aient été effectués, on nettoie tout le répertoire test
+     * -> www/mon/site/mapremierepage.md
+     */
     @AfterAll
     static void cleanRepertoryTest() {
         File dir = new File("www/mon");

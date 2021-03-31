@@ -12,8 +12,6 @@ import static ch.heigvd.labo.Utility.*;
 
 @Command(name = "init", description ="Initialise un répertoire de site statique")
 public class Init implements Callable<Integer> {
-    // Répertoire racine de notre site statique
-    static final String DIR_RACINE = "www/";
 
     @Override public Integer call() throws IOException {
         File dir = new File(DIR_RACINE + file.getPath());
@@ -55,16 +53,16 @@ public class Init implements Callable<Integer> {
                 conf = new File(dir + "/index.md");
                 created = false;
 
-                // Si le fichier de config existe deja, on ne le recrée pas
+                // Si le fichier index existe deja, on ne le recrée pas
                 if (conf.exists()) {
-                    System.out.println("le fichier de configuration existe déjà");
+                    System.out.println("le fichier d'index existe déjà");
                     return 0;
                 } else {
                     created = conf.createNewFile();
                 }
 
                 if (created) {
-                    System.out.println("Le fichier de config a été créé : " + conf.getAbsolutePath());
+                    System.out.println("Le fichier d'index a été créé : " + conf.getAbsolutePath());
 
                     // Ajout du template dans le fichier de config créé
                     FileWriter writing = new FileWriter(conf, true);
@@ -74,7 +72,7 @@ public class Init implements Callable<Integer> {
 
                 } else {
                     System.out.println("Un problème a été rencontré et le fichier n'a pas été créé.");
-                    throw new IOException("La création du fichier de configuration a échoué.");
+                    throw new IOException("La création du fichier d'index a échoué.");
                 }
             }
             catch (IOException e) {
