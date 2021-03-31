@@ -8,9 +8,10 @@ import org.apache.commons.io.FileUtils;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
+import static ch.heigvd.labo.Utility.*;
+
 @Command(name = "clean", description ="Nettoie le répertoire build du site statique.")
 public class Clean implements Callable<Integer> {
-    static final String DIR_TO_REMOVE = "/build";
 
     @CommandLine.Parameters(paramLabel = "FILE", description = "Chemin du répertoire du site statique à nettoyer.")
     File dir;
@@ -22,7 +23,7 @@ public class Clean implements Callable<Integer> {
             return 1;
         }
 
-        File dirToRemove = new File(dir.getPath()+DIR_TO_REMOVE);
+        File dirToRemove = new File(dir.getPath() + DIR_TO_REMOVE);
 
         //Vérifie que le répertoire a supprimé est existant
         if(!dirToRemove.exists()){
