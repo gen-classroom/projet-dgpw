@@ -35,7 +35,7 @@ public class New implements Callable<Integer> {
                 return 1;
             }
 
-            // On ajoute un répertoire "metadonnee" où toute les métadonnées seront stockées dedans
+            // On ajoute un répertoire "metadonnee" dans lequel toutes les métadonnées seront stockées
             File dir = new File(path + "/metadonnee");
             path = dir.getPath();
 
