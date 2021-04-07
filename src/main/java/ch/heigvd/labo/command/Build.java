@@ -1,10 +1,11 @@
 package ch.heigvd.labo.command;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.concurrent.Callable;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.concurrent.Callable;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -19,14 +20,14 @@ import org.commonmark.renderer.html.HtmlRenderer;
 @Command(name = "build", description ="Compile un site statique")
 public class Build implements Callable<Integer> {
     static final String DIR_ROOT = "www/";
-    static final String DIR_TO_COMPILE = "/metadonnee";
 
     @CommandLine.Option(names = "-d", description = "Répertoire du site statique")
     static File siteDir;
 
-    @Override public Integer call(){
+    @Override public Integer call() throws IOException {
         if(siteDir != null){
             File dir = new File(DIR_ROOT + siteDir.getPath());
+
             //Vérifie que le répertoire du site est existant
             if (!dir.exists()) {
                 System.out.format("Impossible d'accéder au répertoire %s. Celui-ci est inexistant.\n", dir.getName());
@@ -65,19 +66,50 @@ public class Build implements Callable<Integer> {
         }
     }
 
-    public boolean listDirectory(File root, File build){
+    /**
+     *
+     * @param root - racine du répertoire
+     * @param build - répertoire équivalent à la racine dans le répertoire build
+     * @return - booléen permettant de savoir si tout s'est bien passé ou non
+     * @throws IOException
+     */
+    public boolean listDirectory(File root, File build) throws IOException {
         File[] files = root.listFiles();
         if (files != null) {
             for (File file : files) {
+                String fileName = file.getName();
                 // Création des répertoires
-                if (file.isDirectory() && !file.getName().equals("build")) {
-                    System.out.println("Dossier: " + file.getPath());
+                if (file.isDirectory() && !fileName.equals("build")) {
+                    String dirName = fileName;
+                    System.out.print("Creation " + dirName + ": ");
+
+                    File dirBuild = new File(build.getAbsolutePath() + "/" + dirName);
+                    boolean creationDir = dirBuild.mkdir();
+                    if(!creationDir){
+                        System.out.println("Echec");
+                        return false;
+                    }
+
+                    System.out.println("Reussi");
+                    File newRoot = new File(root.getAbsolutePath() + "/" + dirName);
+                    this.listDirectory(newRoot, dirBuild);
                 // Conversion des fichiers md en html
-                } else if (FilenameUtils.getExtension(file.getName()).equals("md")) {
-                    System.out.println("  Fichier: " + file.getName());
+                } else if (FilenameUtils.getExtension(fileName).equals("md")) {
+                    System.out.print("Conversion " + fileName + ": ");
+                    File htmlFile = new File(build.getAbsolutePath() + "/" + fileName.substring(0, file.getName().length() - 3) + ".html");
+                    // Création du fichier html
+                    if (!htmlFile.createNewFile()) {
+                        System.out.println("Echec");
+                        return false;
+                    }
+                    this.convertFile(file, htmlFile);
+                    System.out.println("Reussi");
                 // Copie des autres fichiers (image par exemple)
-                } else if (!FilenameUtils.getExtension(file.getName()).equals("yaml")) {
-                    System.out.println("  Fichier: " + file.getName());
+                } else if (!FilenameUtils.getExtension(fileName).equals("yaml") && !fileName.equals("build")) {
+                    System.out.print("Copie " + fileName + ": ");
+                    File newFile = new File(build.getAbsolutePath() + "/" + fileName);
+                    FileUtils.copyFile(file, newFile);
+                    System.out.println("Reussi");
                 }
             }
         } else {
@@ -86,11 +118,21 @@ public class Build implements Callable<Integer> {
         return true;
     }
 
-    public boolean convertFile(){
+    /**
+     * Fonction convertissant le markdown en html
+     * @param fileToConvert - fichier md
+     * @param newFile - fichier html
+     * @throws IOException
+     */
+    public void convertFile(File fileToConvert, File newFile) throws IOException {
+        Path filePath = Path.of(fileToConvert.getAbsolutePath());
+        String fileString = Files.readString(filePath);
+
         Parser parser = Parser.builder().build();
-        Node document = parser.parse("Yo");
+        Node document = parser.parse(fileString);
         HtmlRenderer renderer = HtmlRenderer.builder().build();
-        System.out.format(renderer.render(document));
-        return true;
+
+        Path htmlPath = Path.of(newFile.getAbsolutePath());
+        Files.writeString(htmlPath, renderer.render(document));
     }
 }
