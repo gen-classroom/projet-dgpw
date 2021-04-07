@@ -58,7 +58,7 @@ public class Build implements Callable<Integer> {
                     return 1;
                 }
             }
-
+            System.out.format("Compilation terminée !");
             return 0;
         } else {
             System.out.println("Le paramètre -d n'a pas été précisé !");
