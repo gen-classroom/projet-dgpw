@@ -38,7 +38,7 @@ public class Build implements Callable<Integer> {
             // Teste si le repertoire build exite déjà et le supprime
             if (dirBuild.exists()){
                 // Appel fonction clean
-                new CommandLine(new Clean()).execute("-d", dir.getPath());
+                new CommandLine(new Clean()).execute("-d", siteDir.getPath());
             }
 
             boolean creationBuild = dirBuild.mkdir();

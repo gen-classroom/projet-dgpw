@@ -17,19 +17,21 @@ public class Clean implements Callable<Integer> {
     static File dir;
 
     @Override public Integer call() throws IOException{
+        File dirS = new File(DIR_ROOT + dir.getPath());
+        System.out.println(dirS);
         //Vérifie que le répertoire est renseigné
-        if(dir == null ) {
+        if(dirS == null) {
             System.out.println("Merci de renseigner le nom du répertoire à créer : \n-d [nom du répertoire]");
             return 1;
         }
 
         //Vérifie que le répertoire du site est existant
-        if (!dir.exists()) {
-            System.out.format("Impossible d'accéder au répertoire %s. Celui-ci est inexistant.\n",dir.getName());
+        if (!dirS.exists()) {
+            System.out.format("Impossible d'accéder au répertoire %s. Celui-ci est inexistant.\n",dirS.getName());
             return 1;
         }
 
-        File dirToRemove = new File(dir.getPath() + DIR_TO_REMOVE);
+        File dirToRemove = new File(dirS.getPath() + DIR_TO_REMOVE);
 
         //Vérifie que le répertoire a supprimé est existant
         if(!dirToRemove.exists()){
@@ -44,7 +46,7 @@ public class Clean implements Callable<Integer> {
             e.printStackTrace();
         }
 
-        System.out.format("Le répertoire build du site %s a été supprimé.",dir.getName());
+        System.out.format("Le répertoire build du site %s a été supprimé.\n",dirS.getName());
         return 0;
     }
 }
