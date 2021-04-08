@@ -7,11 +7,15 @@ import java.io.PrintWriter;
 import java.util.concurrent.Callable;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
+import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 import static ch.heigvd.labo.Utility.*;
 
 @Command(name = "init", description ="Initialise un répertoire de site statique")
 public class Init implements Callable<Integer> {
+
+    @Option(names = "-d", description = "Répertoire du site statique")
+    static File file;
 
     @Override public Integer call() throws IOException {
         File dir = new File(DIR_RACINE + file.getPath());
@@ -81,7 +85,4 @@ public class Init implements Callable<Integer> {
             return 0;
         }
     }
-
-    @Parameters(paramLabel = "FILE", description = "répertoire pour site statique")
-    File file;
 }

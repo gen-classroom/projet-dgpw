@@ -22,7 +22,7 @@ public class InitTest {
     @Test
     @Order(1)
     void shouldCreateRepertory() throws Exception {
-        int exitCode = new CommandLine(new Init()).execute("test_init");
+        int exitCode = new CommandLine(new Init()).execute("-d", "test_init");
         assertEquals(exitCode, 0);
         assertThrows(Exception.class, () -> {
             throw new Exception();
@@ -36,7 +36,7 @@ public class InitTest {
     @Test
     @Order(2)
     void shouldNotCreateRepertory() throws Exception {
-        int exitCode = new CommandLine(new Init()).execute("test_init");
+        int exitCode = new CommandLine(new Init()).execute("-d", "test_init");
         assertEquals(exitCode, 1);
         assertThrows(Exception.class, () -> {
             throw new Exception();

@@ -18,7 +18,7 @@ public class BuildTest {
     @BeforeAll
     static void createRepertoryTest() throws Exception {
         try {
-            int exitCode = new CommandLine(new Init()).execute("test_build");
+            int exitCode = new CommandLine(new Init()).execute("-d", "test_build");
             assertEquals(exitCode, 0);
             assertThrows(Exception.class, () -> {
                 throw new Exception();
