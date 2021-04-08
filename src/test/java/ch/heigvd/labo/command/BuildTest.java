@@ -13,7 +13,7 @@ public class BuildTest {
     static final String DIR_TO_BUILD = "www/test_build";
 
     /**
-     * Create a test repertory
+     * Création d'un répertoire test
      */
     @BeforeAll
     static void createRepertoryTest() throws Exception {
@@ -39,7 +39,7 @@ public class BuildTest {
     }
 
     /**
-     * Build an inexistant repertory
+     * Build d'un répertoire inexistant, retourne une erreur
      */
     @Test
     @Order(1)
@@ -52,7 +52,7 @@ public class BuildTest {
     }
 
     /**
-     * Build an existant repertory
+     * Build d'un répertoire existant
      */
     @Test
     @Order(2)
@@ -70,7 +70,7 @@ public class BuildTest {
      * afin de ne pas surcharger le projet
      */
     static void cleanRepertoryTest(){
-        File dir = new File("www/test_build");
+        File dir = new File(DIR_TO_BUILD);
         try {
             FileUtils.deleteDirectory(dir);
         } catch (IOException e) {

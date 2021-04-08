@@ -15,9 +15,6 @@ public class MainTest {
         System.setOut(new PrintStream(output));
     }
 
-    /**
-     * Rigorous Test :-)
-     */
     @Test
     public void shouldAnswerWithTrue()
     {

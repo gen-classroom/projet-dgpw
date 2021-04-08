@@ -25,7 +25,7 @@ public class New implements Callable<Integer> {
     @Override public Integer call() throws IOException {
         if(dirStatic != null && filePage != null) {
 
-            path = DIR_RACINE + dirStatic.getPath();
+            path = DIR_ROOT + dirStatic.getPath();
             File dirTest = new File(path);
 
             // L'utilisateur doit préciser en paramètres le répertoire du site statique, s'il n'existe pas

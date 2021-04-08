@@ -1,4 +1,5 @@
 package ch.heigvd.labo.command;
+import static ch.heigvd.labo.Utility.*;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -19,7 +20,6 @@ import org.commonmark.renderer.html.HtmlRenderer;
 
 @Command(name = "build", description ="Compile un site statique")
 public class Build implements Callable<Integer> {
-    static final String DIR_ROOT = "www/";
 
     @CommandLine.Option(names = "-d", description = "Répertoire du site statique")
     static File siteDir;
