@@ -19,10 +19,10 @@ public final class Utility {
             "`code` \n bloc de code: \n ````html \n une image (ne pas oublier de copier l'image dans le répertoire" +
             " ../metadonnee/image.png:\n ![Description](./image.png)-->\n\n" +
             "> titre:\n\n" + "> auteur:\n\n" + "> date:\n\n" + "-----\n" +
-            "#TITRE 1\n" + "##TITRE 2\n" + "###TITRE 3\n" +
+            "# TITRE 1\n" + "## TITRE 2\n" + "### TITRE 3\n" +
             "Contenu de l'article\n\n" + "![Une image](./image.png)\n";
 
-    public static final String MD_INDEX = "#BIENVENUE SUR VOTRE SITE STATIQUE !!!! \n";
+    public static final String MD_INDEX = "# BIENVENUE SUR VOTRE SITE STATIQUE !!!! \n";
 
     // Répertoire racine de notre site statique
     public static final String DIR_RACINE = "www/";

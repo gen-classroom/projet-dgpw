@@ -27,6 +27,7 @@ public class Build implements Callable<Integer> {
     @Override public Integer call() throws IOException {
         if(siteDir != null){
             File dir = new File(DIR_ROOT + siteDir.getPath());
+            System.out.println(siteDir.getPath());
 
             //Vérifie que le répertoire du site est existant
             if (!dir.exists()) {
@@ -38,11 +39,7 @@ public class Build implements Callable<Integer> {
             // Teste si le repertoire build exite déjà et le supprime
             if (dirBuild.exists()){
                 // Appel fonction clean
-                try {
-                    FileUtils.deleteDirectory(dirBuild);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                new CommandLine(new Clean()).execute("-d", dir.getPath());
             }
 
             boolean creationBuild = dirBuild.mkdir();
@@ -58,7 +55,7 @@ public class Build implements Callable<Integer> {
                     return 1;
                 }
             }
-            System.out.format("Compilation terminée !");
+            System.out.format("Compilation terminée !\n");
             return 0;
         } else {
             System.out.println("Le paramètre -d n'a pas été précisé !");
@@ -106,7 +103,7 @@ public class Build implements Callable<Integer> {
                     System.out.println("Reussi");
                 // Copie des autres fichiers (image par exemple)
                 } else if (!FilenameUtils.getExtension(fileName).equals("yaml") && !fileName.equals("build")) {
-                    System.out.print("Copie " + fileName + ": ");
+                    System.out.println("Copie " + fileName + ": ");
                     File newFile = new File(build.getAbsolutePath() + "/" + fileName);
                     FileUtils.copyFile(file, newFile);
                     System.out.println("Reussi");

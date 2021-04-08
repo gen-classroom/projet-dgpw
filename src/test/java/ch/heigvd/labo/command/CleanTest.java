@@ -38,7 +38,7 @@ public class CleanTest {
     @Test
     @Order(1)
     void shouldDeleteExistantRepertoryBuild()throws Exception{
-        int exitCode = new CommandLine(new Clean()).execute(DIR_TO_REMOVE);
+        int exitCode = new CommandLine(new Clean()).execute("-d", DIR_TO_REMOVE);
         assertEquals(exitCode, 0);
         assertThrows(IOException.class, () -> {
             throw new IOException("Impossible de supprimer le répertoire");
@@ -51,7 +51,7 @@ public class CleanTest {
     @Test
     @Order(2)
     void shouldNotDeleteInexistantRepertoryBuild() throws Exception {
-        int exitCode = new CommandLine(new Clean()).execute(DIR_TO_REMOVE);
+        int exitCode = new CommandLine(new Clean()).execute("-d", DIR_TO_REMOVE);
         assertEquals(exitCode, 2);
         assertThrows(IOException.class, () -> {
             throw new IOException("Le répertoire est inexistant");
@@ -64,7 +64,7 @@ public class CleanTest {
     @Test
     @Order(3)
     void shouldNotDeleteInexistantRepertory() throws Exception {
-        int exitCode = new CommandLine(new Clean()).execute("www/inexistant");
+        int exitCode = new CommandLine(new Clean()).execute("-d", "inexistant");
         assertEquals(exitCode, 1);
         assertThrows(IOException.class, () -> {
             throw new IOException("Le répertoire est inexistant");
