@@ -18,6 +18,12 @@ public class Init implements Callable<Integer> {
     static File file;
 
     @Override public Integer call() throws IOException {
+        //Vérifie que le répertoire est renseigné
+        if(file == null ) {
+            System.out.println("Merci de renseigner le nom du répertoire à créer : \n-d [nom du répertoire]");
+            return 1;
+        }
+
         File dir = new File(DIR_ROOT + file.getPath());
 
         if (!dir.mkdirs()) {

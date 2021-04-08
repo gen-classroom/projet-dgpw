@@ -57,7 +57,7 @@ public class Build implements Callable<Integer> {
             System.out.format("Compilation terminée !\n");
             return 0;
         } else {
-            System.out.println("Le paramètre -d n'a pas été précisé !");
+            System.out.println("Merci de renseigner le nom du répertoire à créer : \n-d [nom du répertoire]");
             return 1;
         }
     }
