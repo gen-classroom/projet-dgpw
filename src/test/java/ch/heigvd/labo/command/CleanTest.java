@@ -12,14 +12,14 @@ import org.apache.commons.io.FileUtils;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class CleanTest {
-    static final String DIR_TO_REMOVE = "www/test_clean";
+    static final String DIR_TO_REMOVE = "test_clean";
 
     /**
      * Création d'un répertoire test
      */
     @BeforeAll
     static void createRepertoryTest() throws Exception{
-        File dir = new File(DIR_TO_REMOVE + "/build");
+        File dir = new File("www/" + DIR_TO_REMOVE + "/build");
         try {
             if (!dir.mkdirs()) {
                 throw new IOException("Impossible de créer le répertoire");
