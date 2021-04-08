@@ -76,7 +76,7 @@ public class New implements Callable<Integer> {
 
             return 0;
         } else {
-            System.out.println("Les paramètres -f ou/et -d n'ont pas été précisés !");
+            System.out.println("Merci de renseigner le nom du répertoire et/ou du fichier à créer : \n-d [nom du répertoire] \n-f [nom du fichier]");
             return 1;
         }
     }

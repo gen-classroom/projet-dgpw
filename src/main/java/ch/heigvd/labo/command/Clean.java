@@ -16,15 +16,20 @@ public class Clean implements Callable<Integer> {
     @CommandLine.Option(names = "-d", description = "Chemin du répertoire du site statique à nettoyer")
     static File dir;
 
-    @Override public Integer call(){
-        File dirStatic = new File(dir.getPath());
-        //Vérifie que le répertoire du site est existant
-        if (!dirStatic.exists()) {
-            System.out.format("Impossible d'accéder au répertoire %s. Celui-ci est inexistant.\n",dirStatic.getName());
+    @Override public Integer call() throws IOException{
+        //Vérifie que le répertoire est renseigné
+        if(dir == null ) {
+            System.out.println("Merci de renseigner le nom du répertoire à créer : \n-d [nom du répertoire]");
             return 1;
         }
 
-        File dirToRemove = new File(dirStatic.getPath() + DIR_TO_REMOVE);
+        //Vérifie que le répertoire du site est existant
+        if (!dir.exists()) {
+            System.out.format("Impossible d'accéder au répertoire %s. Celui-ci est inexistant.\n",dir.getName());
+            return 1;
+        }
+
+        File dirToRemove = new File(dir.getPath() + DIR_TO_REMOVE);
 
         //Vérifie que le répertoire a supprimé est existant
         if(!dirToRemove.exists()){
@@ -39,7 +44,7 @@ public class Clean implements Callable<Integer> {
             e.printStackTrace();
         }
 
-        System.out.format("Le répertoire build du site %s a été supprimé.",dirStatic.getName());
+        System.out.format("Le répertoire build du site %s a été supprimé.",dir.getName());
         return 0;
     }
 }
