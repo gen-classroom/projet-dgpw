@@ -1,4 +1,5 @@
 package ch.heigvd.labo.command;
+import static ch.heigvd.labo.Utility.*;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -19,7 +20,6 @@ import org.commonmark.renderer.html.HtmlRenderer;
 
 @Command(name = "build", description ="Compile un site statique")
 public class Build implements Callable<Integer> {
-    static final String DIR_ROOT = "www/";
 
     @CommandLine.Option(names = "-d", description = "Répertoire du site statique")
     static File siteDir;
@@ -27,7 +27,6 @@ public class Build implements Callable<Integer> {
     @Override public Integer call() throws IOException {
         if(siteDir != null){
             File dir = new File(DIR_ROOT + siteDir.getPath());
-            System.out.println(siteDir.getPath());
 
             //Vérifie que le répertoire du site est existant
             if (!dir.exists()) {

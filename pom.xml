@@ -12,6 +12,21 @@
   <!-- FIXME change it to the project's website -->
   <url>http://www.example.com</url>
 
+  <contributors>
+    <contributor>
+      <name>Gwendoline Dössegger</name>
+    </contributor>
+    <contributor>
+      <name>Robin Gaudin</name>
+    </contributor>
+    <contributor>
+      <name>Noémie Plancherel</name>
+    </contributor>
+    <contributor>
+      <name>Cassandre Wojciechowski</name>
+    </contributor>
+  </contributors>
+
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>11</maven.compiler.source>

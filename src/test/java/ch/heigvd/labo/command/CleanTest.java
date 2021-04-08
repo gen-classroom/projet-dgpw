@@ -1,15 +1,12 @@
 package ch.heigvd.labo.command;
+
 import static org.junit.jupiter.api.Assertions.*;
 
-import ch.heigvd.labo.Main;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.io.TempDir;
 import picocli.CommandLine;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+
 
 import org.apache.commons.io.FileUtils;
 
@@ -18,7 +15,7 @@ public class CleanTest {
     static final String DIR_TO_REMOVE = "www/test_clean";
 
     /**
-     * Create a test repertory
+     * Création d'un répertoire test
      */
     @BeforeAll
     static void createRepertoryTest() throws Exception{
@@ -33,7 +30,7 @@ public class CleanTest {
     }
 
     /**
-     * Delete an existant repertory
+     * Suppression d'un répertoire existant
     */
     @Test
     @Order(1)
@@ -46,7 +43,7 @@ public class CleanTest {
     }
 
     /**
-     * Try to delete an inexistant repertory build
+     * Suppression d'un répertoire build inexistant, retourne une erreur
      */
     @Test
     @Order(2)
@@ -59,7 +56,7 @@ public class CleanTest {
     }
 
     /**
-     * Try to delete an inexistant repertory
+     * Suppression d'un répertoire inexistant, retourne une erreur
     */
     @Test
     @Order(3)

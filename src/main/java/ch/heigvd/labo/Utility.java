@@ -25,7 +25,7 @@ public final class Utility {
     public static final String MD_INDEX = "# BIENVENUE SUR VOTRE SITE STATIQUE !!!! \n";
 
     // Répertoire racine de notre site statique
-    public static final String DIR_RACINE = "www/";
+    public static final String DIR_ROOT = "www/";
 
     public static final String DIR_TO_REMOVE = "/build";
 }
