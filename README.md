@@ -9,7 +9,7 @@
 **Etat du projet : En cours**
 
 ------
-
+### Générer l'executable 
 Pour générer et unzip le projet :
 
 `````bash
@@ -34,45 +34,44 @@ Programme DGPW - Website Generator
 Commands:
   new    Création d'une nouvelle page
   clean  Nettoie le répertoire build du site statique.
-  build  Build .... ???
+  build  Compile un site statique
   serve  Serve .... ???
   init   Initialise un répertoire de site statique
 ````
 ------
 
-Pour afficher la version:
+### Affichage Version
+Pour afficher la version, utiliser le paramètre `-v` ou `--version` :
 
 ````bash
+Usage: Main [-v]
+Programme DGPW - Website Generator
+  -v, --version   Display the version and exit
+  
 > dgpw -v
 
 # Affichage
-DGPW version 0.1.0-SNAPSHOT
+DGPW version X.X.X-SNAPSHOT
 ````
 
-Pour initialiser le site statique :
+### Initialisation du site
+Pour initialiser le site statique, utiliser la commande `init` :
 
 ````bash
-> dgpw init test_unit
+Usage: Main init [-d=<file>]
+Initialise un répertoire de site statique
+  -d=<file>    Répertoire du site statique
+
+> dgpw init -d test_unit
 
 # Affichage
 Le répertoire a été créé 
 ````
 
-Afin d'avoir un projet organisé, le site statique est automatiquement créé dans le répertoire `www/`. Lorsque l'utilisateur souhaite créer un dossier `/mon/site` par exemple, le répertoire se présentera ansi: `www/mon/site`.
+Lors de l'initialisation du site statique, celui-ci est automatiquement créé dans le répertoire `www`. Lorsque l'utilisateur souhaite créer un dossier `/mon/site` par exemple, le répertoire se présentera ansi: `www/mon/site`.
 
-Pour clean le site statique (supprimer le répertoire build) :
-
-```bash
-Exemple : dgpw clean <cheminDuSite>
-> dgpw clean www/test_init
-
-# Affiche 
-le répertoire build a été supprimé
-```
-
-Le chemin complet du site statique doit être renseigné pour supprimer le répertoire build. Sans celui-ci, l'erreur Impossible d'accéder au répertoire <nom>. Celui-ci est inexistant.
-
-Afin de créer une nouvelle page avec la commande New:
+### Ajouter une nouvelle page
+Pour créer une nouvelle page template, utiliser la commande `new`:
 
 ````bash
 Usage: Main new [-d=<dirStatic>] [-f=<filePage>]
@@ -80,8 +79,43 @@ Création d'une nouvelle page
   -d=<dirStatic>    Répertoire du site statique
   -f=<filePage>     Nom de la page
   
-> dgpw new -f mapremierepage -d test_init/
+> dgpw new -f mapremierepage -d test_init
 
 # Affichage
 La page voulue, mapremierepage.md, a été créée
 ````
+>/!\ Le nom de la page ne doit pas avoir d'extension. 
+
+Pour ajouter une nouvelle page au site, le répertoire doit `OBLIGATOIREMENT` être dans le répertoire `www`. Si ce n'est pas le cas, une erreur sera retournée.
+
+### Build le site Web (générer les pages HTML)
+Pour générer les pages HTML, utiliser la commande `build`:
+```bash
+Usage: Main build [-d=<siteDir>]
+Compile un site statique
+  -d=<siteDir>    Répertoire du site statique
+  
+> dgpw build -d test-init
+
+#Affichage
+Compilation terminée !
+```
+> /!\ Si le répertoire du site Web contient deja un répertoire build, celui-ci sera supprimé et recréer d'après les fichiers présents dans le répertoire.g
+
+Pour générer les pages HTML du site, le répertoire doit `OBLIGATOIREMENT` être dans le répertoire `www`. Si ce n'est pas le cas, une erreur sera retournée.
+
+### Nettoyer le site (répertoire build)
+Pour clean le site statique (supprimer le répertoire build), utiliser la commande `clean`:
+
+```bash
+Usage: Main clean [-d=<dir>]
+Nettoie le répertoire build du site statique.
+  -d=<dir>    Chemin du répertoire du site statique à nettoyer
+  
+> dgpw clean -d test_init
+
+# Affiche 
+le répertoire build a été supprimé.
+```
+
+Pour que le site soit nettoyer, son répertoire doit `OBLIGATOIREMENT` être dans le répertoire `www`. Si ce n'est pas le cas, une erreur sera retournée.
