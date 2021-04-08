@@ -27,7 +27,6 @@ public class Build implements Callable<Integer> {
     @Override public Integer call() throws IOException {
         if(siteDir != null){
             File dir = new File(DIR_ROOT + siteDir.getPath());
-            System.out.println(siteDir.getPath());
 
             //Vérifie que le répertoire du site est existant
             if (!dir.exists()) {
