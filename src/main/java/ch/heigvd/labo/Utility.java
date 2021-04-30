@@ -28,4 +28,5 @@ public final class Utility {
     public static final String DIR_ROOT = "www/";
 
     public static final String DIR_TO_REMOVE = "/build";
+    public static final String LOCALHOST = "localhost/";
 }
