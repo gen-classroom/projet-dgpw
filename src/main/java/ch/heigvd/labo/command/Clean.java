@@ -31,7 +31,7 @@ public class Clean implements Callable<Integer> {
             return 1;
         }
 
-        File dirToRemove = new File(dirS.getPath() + DIR_TO_REMOVE);
+        File dirToRemove = new File(dirS.getPath() + DIR_BUILD);
 
         //Vérifie que le répertoire a supprimé est existant
         if(!dirToRemove.exists()){
