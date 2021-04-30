@@ -27,6 +27,6 @@ public final class Utility {
     // Répertoire racine de notre site statique
     public static final String DIR_ROOT = "www/";
 
-    public static final String DIR_TO_REMOVE = "/build";
+    public static final String DIR_BUILD = "/build";
     public static final String LOCALHOST = "http://localhost:63342/my-app/";
 }
