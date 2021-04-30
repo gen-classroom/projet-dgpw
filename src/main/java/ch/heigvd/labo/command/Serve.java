@@ -53,7 +53,8 @@ public class Serve implements Callable {
                 System.out.println("Une erreur s'est produite durant le build");
                 return 2;
             }
-            System.out.println("Vous pouvez accéder au site web via " + Utility.LOCALHOST+dirStatic.getPath()+"/index.html");
+            System.out.println("Vous pouvez accéder au site web via " + Utility.LOCALHOST+Utility.DIR_ROOT+dirStatic.getPath()+Utility.DIR_TO_REMOVE+"/index.html");
+            //http://localhost:63342/my-app/www/kk/build/index.html
             return 0;
         }
         System.out.println("Merci de renseigner le nom du répertoire et/ou du fichier à créer : \n-d [nom du répertoire] \n-f [nom du fichier]");
