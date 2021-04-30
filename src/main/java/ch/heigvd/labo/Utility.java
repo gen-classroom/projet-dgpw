@@ -22,6 +22,13 @@ public final class Utility {
             "# TITRE 1\n" + "## TITRE 2\n" + "### TITRE 3\n" +
             "Contenu de l'article\n\n" + "![Une image](./image.png)\n";
 
+    public static final String LAYOUT_HTML = "<html lang=\"en\">\n<head>\n\t<meta charset=\"utf-8\">\n\t" +
+            "<title>{{site.titre}}| {{page.titre}}</title>\n</head>\n" +
+            "<body>\n\t{%include menu.html}\n\t{{content }}\n</body>\n</html>";
+
+    public static final String MENU_HTML = "<ul>\n\t<li><ahref=\"/index.html\">home</a></li>\n\t" +
+            "<li><ahref=\"/content/page.html\">page</a></li>\n</ul>";
+
     public static final String MD_INDEX = "# BIENVENUE SUR VOTRE SITE STATIQUE !!!! \n";
 
     // Répertoire racine de notre site statique
