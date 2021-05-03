@@ -9,6 +9,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.concurrent.Callable;
 
+import org.apache.commons.io.FileUtils;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
@@ -28,27 +29,31 @@ public class Init implements Callable<Integer> {
         }
 
         File dir = new File(DIR_ROOT + file.getPath());
-
         if (!dir.mkdirs()) {
             System.out.println("La création du répertoire a échoué ou le répertoire existe déjà");
             return 1;
         } else {
             System.out.println("Le répertoire a été créé");
 
+            // On ajoute un répertoire "metadonnee" dans lequel toutes les métadonnées seront stockées
+            File metadataDir = new File(dir.toString() + DIR_METADATA);
+
+            if (!metadataDir.mkdirs()) {
+                System.out.format("Le répertoire n'existe pas %s", metadataDir.getName());
+                return 1;
+            }
+
             // Création du fichier de configuration
             try {
                 File conf = new File(dir + "/config.yaml");
-                boolean created = false;
 
                 // Si le fichier de config existe deja, on ne le recrée pas
                 if (conf.exists()) {
                     System.out.println("le fichier de configuration existe déjà");
-                    return 0;
-                } else {
-                    created = conf.createNewFile();
+                    return 1;
                 }
 
-                if (created) {
+                if (conf.createNewFile()) {
                     System.out.println("Le fichier de config a été créé : " + conf.getAbsolutePath());
 
                     // Ajout du template dans le fichier de config créé
@@ -64,17 +69,14 @@ public class Init implements Callable<Integer> {
 
                 // Création du fichier index
                 conf = new File(dir + "/index.md");
-                created = false;
 
                 // Si le fichier index existe deja, on ne le recrée pas
                 if (conf.exists()) {
                     System.out.println("le fichier d'index existe déjà");
-                    return 0;
-                } else {
-                    created = conf.createNewFile();
+                    return 1;
                 }
 
-                if (created) {
+                if (conf.createNewFile()) {
                     System.out.println("Le fichier d'index a été créé : " + conf.getAbsolutePath());
 
                     // Ajout du template dans le fichier de config créé
@@ -87,7 +89,6 @@ public class Init implements Callable<Integer> {
                     System.out.println("Un problème a été rencontré et le fichier n'a pas été créé.");
                     throw new IOException("La création du fichier d'index a échoué.");
                 }
-
             }
             catch (IOException e) {
                 e.printStackTrace();

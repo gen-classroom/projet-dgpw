@@ -31,17 +31,26 @@ public class Clean implements Callable<Integer> {
             return 1;
         }
 
-        File dirToRemove = new File(dirS.getPath() + DIR_BUILD);
+        File dirToRemoveBuild = new File(dirS.getPath() + DIR_BUILD);
+        File dirToRemoveResources = new File(dirS.getPath() + DIR_RESOURCES);
 
-        //Vérifie que le répertoire a supprimé est existant
-        if(!dirToRemove.exists()){
-            System.out.format("Impossible de supprimer %s. Celui-ci est inexistant.\n",dirToRemove.getName());
+        //Vérifie que le répertoire build a supprimé est existant
+        if(!dirToRemoveBuild.exists()){
+            System.out.format("Impossible de supprimer %s. Celui-ci est inexistant.\n",dirToRemoveBuild.getName());
             return 2;
         }
 
+        //Vérifie que le répertoire resources a supprimé est existant
+        if(!dirToRemoveResources.exists()){
+            System.out.format("Impossible de supprimer %s. Celui-ci est inexistant.\n",dirToRemoveResources.getName());
+            return 2;
+        }
+
+
         //Supprime le répertoire récursivement
         try {
-            FileUtils.deleteDirectory(dirToRemove);
+            FileUtils.deleteDirectory(dirToRemoveBuild);
+            FileUtils.deleteDirectory(dirToRemoveResources);
         } catch (IOException e) {
             e.printStackTrace();
         }

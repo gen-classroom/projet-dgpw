@@ -1,6 +1,8 @@
 package ch.heigvd.labo.command;
 import static ch.heigvd.labo.Utility.*;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.concurrent.Callable;
@@ -41,12 +43,32 @@ public class Build implements Callable<Integer> {
                 new CommandLine(new Clean()).execute("-d", siteDir.getPath());
             }
 
+            // Création du répertoire "template" pour y insérer les fichiers .html
+            try {
+                FileUtils.copyDirectoryToDirectory(new File("src/main/resources"), dir);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
             boolean creationBuild = dirBuild.mkdir();
             // Teste si le répertoire build s'est bien créé
             if(!creationBuild){
                 System.out.format("Le répertoire build ne s'est pas créé.");
                 return 1;
             } else {
+                File menuFile = new File(dir + "/resources/menu.html");
+                boolean menu = this.constructMenu(dir, menuFile);
+                // Teste si le menu a pu être créé
+                if (!menu){
+                    System.out.format("Le fichier menu.html n'a pas pu être créé correctement.");
+                    return 1;
+                }
+
+                BufferedWriter writer = new BufferedWriter(new FileWriter(menuFile, true));
+                writer.write("</ul>\n");
+                writer.flush();
+                writer.close();
+
                 boolean creationStructure = this.listDirectory(dir, dirBuild);
                 // Teste si la structure a pu être recréée
                 if (!creationStructure){
@@ -61,6 +83,44 @@ public class Build implements Callable<Integer> {
             return 1;
         }
     }
+
+    /**
+     *
+     * @param root
+     * @param menu
+     * @return
+     * @throws IOException
+     */
+    public boolean constructMenu(File root, File menu) throws IOException {
+        File[] files = root.listFiles();
+        if (files != null) {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(menu, true));
+            writer.write("\n");
+            for (File file : files) {
+                String fileName = file.getName();
+                if (file.isDirectory() && !fileName.equals("build") && !fileName.equals("resources")) {
+                    File newRoot = new File(root.getAbsolutePath() + "/" + fileName);
+                    this.constructMenu(newRoot, menu);
+                } else if (FilenameUtils.getExtension(fileName).equals("md") && !fileName.equals("index.md")) {
+                    String page = fileName.substring(0, file.getName().length() - 3);
+                    String line = "\t<li><a href=\"/" + page + ".html\">" + page + "</a></li>\n";
+
+                    writer.write(line);
+                    writer.flush();
+                }
+            }
+            //writer.write("</ul>\n");
+            //writer.flush();
+
+            writer.close();
+
+        } else {
+            return false;
+        }
+        return true;
+    }
+
+
 
     /**
      *
@@ -81,7 +141,7 @@ public class Build implements Callable<Integer> {
 
                     File dirBuild = new File(build.getAbsolutePath() + "/" + dirName);
                     boolean creationDir = dirBuild.mkdir();
-                    if(!creationDir){
+                    if (!creationDir) {
                         System.out.println("Echec");
                         return false;
                     }
@@ -89,7 +149,7 @@ public class Build implements Callable<Integer> {
                     System.out.println("Reussi");
                     File newRoot = new File(root.getAbsolutePath() + "/" + dirName);
                     this.listDirectory(newRoot, dirBuild);
-                // Conversion des fichiers md en html
+                    // Conversion des fichiers md en html
                 } else if (FilenameUtils.getExtension(fileName).equals("md")) {
                     System.out.print("Conversion " + fileName + ": ");
                     File htmlFile = new File(build.getAbsolutePath() + "/" + fileName.substring(0, file.getName().length() - 3) + ".html");
@@ -101,8 +161,8 @@ public class Build implements Callable<Integer> {
 
                     String content = this.convertFile(file, htmlFile);
                     System.out.println("Reussi");
-                // Copie des autres fichiers (image par exemple)
-                } else if (!FilenameUtils.getExtension(fileName).equals("yaml") && !fileName.equals("build")) {
+                    // Copie des autres fichiers (image par exemple)
+                } else if (!FilenameUtils.getExtension(fileName).equals("yaml") && !fileName.equals("build") && !fileName.equals("resources")) {
                     System.out.println("Copie " + fileName + ": ");
                     File newFile = new File(build.getAbsolutePath() + "/" + fileName);
                     FileUtils.copyFile(file, newFile);

@@ -29,7 +29,7 @@ public class Serve implements Callable {
             if (initOption) {
                 result = new CommandLine(new Init()).execute("-d", dirStatic.getPath());
                 if(result != 0) {
-                    System.out.println("Une erreur s'est produite durant le new");
+                    System.out.println("Une erreur s'est produite durant le init");
                     return 2;
                 }
             }
@@ -38,7 +38,7 @@ public class Serve implements Callable {
                 if(filePage != null) {
                     result = new CommandLine(new New()).execute("-d", dirStatic.getPath(), "-f", filePage.getName());
                     if (result != 0) {
-                        System.out.println("Une erreur s'est produite durant le init");
+                        System.out.println("Une erreur s'est produite durant le new");
                         return 2;
                     }
                 }
