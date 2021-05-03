@@ -99,7 +99,7 @@ public class Build implements Callable<Integer> {
                         return false;
                     }
 
-                    this.convertFile(file, htmlFile);
+                    String content = this.convertFile(file, htmlFile);
                     System.out.println("Reussi");
                 // Copie des autres fichiers (image par exemple)
                 } else if (!FilenameUtils.getExtension(fileName).equals("yaml") && !fileName.equals("build")) {
@@ -121,7 +121,7 @@ public class Build implements Callable<Integer> {
      * @param newFile - fichier html
      * @throws IOException
      */
-    public void convertFile(File fileToConvert, File newFile) throws IOException {
+    public String convertFile(File fileToConvert, File newFile) throws IOException {
         Path filePath = Path.of(fileToConvert.getAbsolutePath());
         String fileString = Files.readString(filePath);
 
@@ -129,7 +129,12 @@ public class Build implements Callable<Integer> {
         Node document = parser.parse(fileString);
         HtmlRenderer renderer = HtmlRenderer.builder().build();
 
-        Path htmlPath = Path.of(newFile.getAbsolutePath());
-        Files.writeString(htmlPath, renderer.render(document));
+        /*Path htmlPath = Path.of(newFile.getAbsolutePath());
+        Files.writeString(htmlPath, renderer.render(document));*/
+        return renderer.render(document);
+    }
+
+    public void generateFile(String content) {
+
     }
 }
