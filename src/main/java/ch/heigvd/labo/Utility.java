@@ -27,7 +27,7 @@ public final class Utility {
             "<body>\n\t{%include menu.html}\n\t{{content }}\n</body>\n</html>";
 
     public static final String MENU_HTML = "<ul>\n\t<li><ahref=\"/index.html\">home</a></li>\n\t" +
-            "<li><ahref=\"/content/page.html\">page</a></li>\n</ul>";
+            "<li><ahref=\"/metadonnee/page.html\">page</a></li>\n</ul>";
 
     public static final String MD_INDEX = "# BIENVENUE SUR VOTRE SITE STATIQUE !!!! \n";
 

@@ -88,68 +88,6 @@ public class Init implements Callable<Integer> {
                     throw new IOException("La création du fichier d'index a échoué.");
                 }
 
-                // Création du répertoire "template" pour y insérer les fichiers .html
-                String newDir = dir.toString() + "/template";
-                File templateDir = new File(newDir);
-
-                if (templateDir.mkdirs()) {
-                    System.out.println("Le répertoire template a été créé : " + templateDir.getAbsolutePath());
-                } else {
-                    System.out.println("Le répertoire template n'a pas pu être créé.");
-                    throw new IOException("La création du répertoire template a échoué.");
-                }
-
-                // Création du fichier menu.html
-                conf = new File(templateDir + "/menu.html");
-                created = false;
-
-                // Si le fichier existe deja, on ne le recrée pas
-                if (conf.exists()) {
-                    System.out.println("le fichier de menu existe déjà");
-                    return 0;
-                } else {
-                    created = conf.createNewFile();
-                }
-
-                if (created) {
-                    System.out.println("Le fichier de menu a été créé : " + conf.getAbsolutePath());
-
-                    // Ajout du template dans le fichier de config créé
-                    FileWriter writing = new FileWriter(conf, true);
-                    PrintWriter printing = new PrintWriter(writing);
-                    printing.append(MENU_HTML);
-                    printing.close();
-
-                } else {
-                    System.out.println("Un problème a été rencontré et le fichier n'a pas été créé.");
-                    throw new IOException("La création du fichier de menu a échoué.");
-                }
-
-                // Création du fichier layout.html
-                conf = new File(templateDir + "/layout.html");
-                created = false;
-
-                // Si le fichier existe deja, on ne le recrée pas
-                if (conf.exists()) {
-                    System.out.println("le fichier de layout existe déjà");
-                    return 0;
-                } else {
-                    created = conf.createNewFile();
-                }
-
-                if (created) {
-                    System.out.println("Le fichier de layout a été créé : " + conf.getAbsolutePath());
-
-                    // Ajout du template dans le fichier de config créé
-                    FileWriter writing = new FileWriter(conf, true);
-                    PrintWriter printing = new PrintWriter(writing);
-                    printing.append(LAYOUT_HTML);
-                    printing.close();
-
-                } else {
-                    System.out.println("Un problème a été rencontré et le fichier n'a pas été créé.");
-                    throw new IOException("La création du fichier de layout a échoué.");
-                }
             }
             catch (IOException e) {
                 e.printStackTrace();

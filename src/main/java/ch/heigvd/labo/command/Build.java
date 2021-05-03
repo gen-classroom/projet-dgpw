@@ -75,7 +75,7 @@ public class Build implements Callable<Integer> {
             for (File file : files) {
                 String fileName = file.getName();
                 // Création des répertoires
-                if (file.isDirectory() && !fileName.equals("build")) {
+                if (file.isDirectory() && !fileName.equals("build") && !fileName.equals("resources")) {
                     String dirName = fileName;
                     System.out.print("Creation " + dirName + ": ");
 
@@ -98,6 +98,7 @@ public class Build implements Callable<Integer> {
                         System.out.println("Echec");
                         return false;
                     }
+
                     this.convertFile(file, htmlFile);
                     System.out.println("Reussi");
                 // Copie des autres fichiers (image par exemple)
