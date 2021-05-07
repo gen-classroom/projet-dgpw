@@ -32,14 +32,14 @@ public class Build implements Callable<Integer> {
         if(siteDir != null){
             File dir = new File(DIR_ROOT + siteDir.getPath());
 
-            //Vérifie que le répertoire du site est existant
+            // Vérifie que le répertoire du site est existant
             if (!dir.exists()) {
                 System.out.format("Impossible d'accéder au répertoire %s. Celui-ci est inexistant.\n", dir.getName());
                 return 1;
             }
 
             File dirBuild = new File(dir.getAbsolutePath() + "/build");
-            // Teste si le repertoire build exite déjà et le supprime
+            // Teste si le repertoire build existe déjà et le supprime
             if (dirBuild.exists()){
                 // Appel fonction clean
                 new CommandLine(new Clean()).execute("-d", siteDir.getPath());
@@ -58,34 +58,13 @@ public class Build implements Callable<Integer> {
                 System.out.format("Le répertoire build ne s'est pas créé.");
                 return 1;
             } else {
-                File menuFile = new File(dir + "/resources/menu.html");
+                // Création des menus pour les fichiers de metadonnee et le fichier index
+                boolean menu = this.configMenu(dir, "/resources/menu.html");
+                if (!menu) return 1;
+                boolean menuIndex = this.configMenu(dir, "/resources/menuIndex.html");
+                if(!menuIndex) return 1;
 
-                boolean menu = this.constructMenu(dir, menuFile);
-                // Teste si le menu a pu être créé
-                if (!menu){
-                    System.out.format("Le fichier menu.html n'a pas pu être créé correctement.");
-                    return 1;
-                }
-
-                BufferedWriter writer = new BufferedWriter(new FileWriter(menuFile, true));
-                writer.write("</ul>\n");
-                writer.flush();
-                writer.close();
-
-                menuFile = new File(dir + "/resources/menuIndex.html");
-
-                menu = this.constructMenu(dir, menuFile);
-                // Teste si le menu a pu être créé
-                if (!menu){
-                    System.out.format("Le fichier menuIndex.html n'a pas pu être créé correctement.");
-                    return 1;
-                }
-
-                writer = new BufferedWriter(new FileWriter(menuFile, true));
-                writer.write("</ul>\n");
-                writer.flush();
-                writer.close();
-
+                // Création de la structure build
                 boolean creationStructure = this.listDirectory(dir, dirBuild);
                 // Teste si la structure a pu être recréée
                 if (!creationStructure){
@@ -103,12 +82,37 @@ public class Build implements Callable<Integer> {
 
     /**
      *
+     * @param dir
+     * @param pathMenu
+     * @return
+     * @throws IOException
+     */
+    private boolean configMenu(File dir, String pathMenu) throws IOException {
+        File menuFile = new File(dir + pathMenu);
+
+        boolean menu = this.constructMenu(dir, menuFile);
+        // Teste si le menu a pu être créé
+        if (!menu){
+            System.out.format("Le fichier menu.html n'a pas pu être créé correctement.");
+            return false;
+        }
+
+        // Ecriture de la fermeture de la liste
+        BufferedWriter writer = new BufferedWriter(new FileWriter(menuFile, true));
+        writer.write("</ul>\n");
+        writer.flush();
+        writer.close();
+        return true;
+    }
+
+    /**
+     *
      * @param root
      * @param menu
      * @return
      * @throws IOException
      */
-    public boolean constructMenu(File root, File menu) throws IOException {
+    private boolean constructMenu(File root, File menu) throws IOException {
         File[] files = root.listFiles();
         if (files != null) {
             BufferedWriter writer = new BufferedWriter(new FileWriter(menu, true));
@@ -121,14 +125,12 @@ public class Build implements Callable<Integer> {
                 } else if (FilenameUtils.getExtension(fileName).equals("md") && !fileName.equals("index.md")) {
                     String page = fileName.substring(0, file.getName().length() - 3);
                     String line;
+
                     if(menu.getName().equals("menuIndex.html")){
                         line = "\t<li><a href=\"metadonnee/" + page + ".html\">" + page + "</a></li>\n";
                     } else {
                         line = "\t<li><a href=\"./" + page + ".html\">" + page + "</a></li>\n";
                     }
-
-
-
 
                     writer.write(line);
                     writer.flush();
@@ -179,51 +181,9 @@ public class Build implements Callable<Integer> {
                         return false;
                     }
 
-                    //************************************************************* Handlebars
-                    TemplateLoader loader = new FileTemplateLoader("www/"+ siteDir.getPath() + "/resources",".html");
-                    com.github.jknack.handlebars.Handlebars handlebars = new com.github.jknack.handlebars.Handlebars(loader);
-                    handlebars.setPrettyPrint(true);
+                    // Appel à HandleBars pour le générateur de template
+                    handleBars(file, htmlFile);
 
-                    handlebars.registerHelper("convertMd", new Helper<String>() {
-                        @Override
-                        public Object apply(String s, Options options) throws IOException {
-                            //Convert page.md to html
-                            Parser parser = Parser.builder().build();
-                            Node document = parser.parse(s);
-                            HtmlRenderer renderer = HtmlRenderer.builder().build();
-
-                            return renderer.render(document);
-                        }
-                    });
-
-                    try {
-                        var template = handlebars.compile("layout");
-                        if(fileName.equals("index.md")){
-                            System.out.println("BBBB"+fileName);
-                            template = handlebars.compile("layoutIndex");
-                        }
-
-                        Map<String,Map<String,String>> elements = new HashMap<>();
-
-                        Map<String,String> config = getParameters(new File("www/"+ siteDir.getPath() + "/config.yaml"));
-                        Map<String,String> page = getParameters(file);
-
-                        elements.put("config",config);
-                        elements.put("page", page);
-
-                        var context = Context
-                                .newBuilder(elements)
-                                .resolver(MapValueResolver.INSTANCE)
-                                .build();
-
-                        var result = template.apply(context);
-                        Files.writeString(Path.of(htmlFile.getAbsolutePath()), result);
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    //************************************************************* Handlebars
                     System.out.println("Reussi");
 
                     // Copie des autres fichiers (image par exemple)
@@ -240,6 +200,11 @@ public class Build implements Callable<Integer> {
         return true;
     }
 
+    /**
+     *
+     * @param file
+     * @return
+     */
     private Map<String,String> getParameters(File file) {
         Map<String,String> map = new HashMap<>();
         try {
@@ -247,13 +212,17 @@ public class Build implements Callable<Integer> {
             String line;
             StringBuilder content = new StringBuilder();
             boolean header = false;
+            // Lecture du fichier ligne par ligne
             while((line = reader.readLine()) != null) {
                 if(line.contains("==")){
+                    // Séparation du header et contenu
                     header = true;
                 }
                 else if(header == true){
+                    // Contenu du fichier
                     content.append(line).append("\n");
                 }else {
+                    // Header du fichier -> title, ...
                     String[] s = line.split(":");
                     map.put(s[0], s[1]);
                 }
@@ -261,11 +230,61 @@ public class Build implements Callable<Integer> {
             if(header) {
                 map.put("content", String.valueOf(content));
             }
-
         }catch(IOException e){
             e.printStackTrace();
         }
-
         return map;
+    }
+
+    /**
+     * Fonction qui utilise HandleBars et gèrent l'injection des données dans le fichier html
+     * @param file Fichier à injecter dans la page html finale
+     * @param htmlFile Fichier html
+     */
+    private void handleBars(File file,File htmlFile) {
+
+        String fileName = file.getName();
+        TemplateLoader loader = new FileTemplateLoader("www/"+ siteDir.getPath() + "/resources",".html");
+        com.github.jknack.handlebars.Handlebars handlebars = new com.github.jknack.handlebars.Handlebars(loader);
+        handlebars.setPrettyPrint(true);
+
+        // Conversion du fichier md
+        handlebars.registerHelper("convertMd", new Helper<String>() {
+            @Override
+            public Object apply(String s, Options options) throws IOException {
+                //Convert page.md to html
+                Parser parser = Parser.builder().build();
+                Node document = parser.parse(s);
+                HtmlRenderer renderer = HtmlRenderer.builder().build();
+
+                return renderer.render(document);
+            }
+        });
+
+        try {
+            var template = handlebars.compile("layout");
+            if(fileName.equals("index.md")){
+                template = handlebars.compile("layoutIndex");
+            }
+
+            Map<String,Map<String,String>> elements = new HashMap<>();
+
+            Map<String,String> config = getParameters(new File("www/"+ siteDir.getPath() + "/config.yaml"));
+            Map<String,String> page = getParameters(file);
+
+            elements.put("config",config);
+            elements.put("page", page);
+
+            var context = Context
+                    .newBuilder(elements)
+                    .resolver(MapValueResolver.INSTANCE)
+                    .build();
+
+            var result = template.apply(context);
+            Files.writeString(Path.of(htmlFile.getAbsolutePath()), result);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
