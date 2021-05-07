@@ -5,7 +5,7 @@ package ch.heigvd.labo;
  */
 public final class Utility {
     public static final String YAML_TEMPLATE = "indexfile: #inserer nom de fichier index\n" +
-            "title:     #inserer titre du site\n" +
+            "title:     inserer titre du site\n" +
             "sourcedir: #inserer repertoire source (probablement www/)\n" +
             "datadir: .\n" +
             "filesdir:  #inserer repertoire contenant les fichiers\n";

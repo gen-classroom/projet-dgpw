@@ -2,17 +2,14 @@ package ch.heigvd.labo.command;
 import static ch.heigvd.labo.Utility.*;
 
 import java.io.*;
-import java.nio.Buffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Hashtable;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.HashMap;
 
 import com.github.jknack.handlebars.*;
 import com.github.jknack.handlebars.context.MapValueResolver;
-import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.FileTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
 import org.apache.commons.io.FileUtils;
@@ -114,9 +111,6 @@ public class Build implements Callable<Integer> {
                     writer.flush();
                 }
             }
-            //writer.write("</ul>\n");
-            //writer.flush();
-
             writer.close();
 
         } else {
@@ -124,7 +118,6 @@ public class Build implements Callable<Integer> {
         }
         return true;
     }
-
 
     /**
      *
@@ -163,8 +156,6 @@ public class Build implements Callable<Integer> {
                         return false;
                     }
 
-                    //copyLayout(new File("src/main/resources/layout.html"), file);
-
                     String content = this.convertFile(file, htmlFile);
                     System.out.println("--------------" + content + "-------------");
 
@@ -173,45 +164,32 @@ public class Build implements Callable<Integer> {
                     com.github.jknack.handlebars.Handlebars handlebars = new com.github.jknack.handlebars.Handlebars(loader);
                     handlebars.setPrettyPrint(true);
 
-                   /* handlebars.registerHelper("md", new Helper<String>() {
+                    handlebars.registerHelper("convertMd", new Helper<String>() {
                         @Override
                         public Object apply(String s, Options options) throws IOException {
-                            //Path filePath = Path.of(fileToConvert.getAbsolutePath());
-                            //String fileString = Files.readString(filePath);
-                            //System.out.println(s);
-
+                            //Convert page.md to html
                             Parser parser = Parser.builder().build();
                             Node document = parser.parse(s);
                             HtmlRenderer renderer = HtmlRenderer.builder().build();
 
-                            //Path htmlPath = Path.of("www/"+ siteDir.getPath() +"/test.html");
-                            //Files.writeString(htmlPath, renderer.render(document));
                             return renderer.render(document);
                         }
-                    });*/
+                    });
 
                     try {
                         var template = handlebars.compile("layout");
                         Map<String,String> config = new HashMap<>();
                         config.put("title", getParameters(new File("www/"+ siteDir.getPath() + "/config.yaml")));
-                        //Path filePath = Path.of(fileToConvert.getAbsolutePath());
                         String fileString = Files.readString(Path.of(file.getAbsolutePath()));
-                        config.put("content", content);
+                        config.put("content", fileString);
 
                         var context = Context
                                 .newBuilder(config)
                                 .resolver(MapValueResolver.INSTANCE)
                                 .build();
 
-                        //fieldValueResolver
-
-                        //Path htmlPath = Path.of("www/"+ siteDir.getPath() +"resources/ + );
-
                         var result = template.apply(context);
-
                         Files.writeString(Path.of(htmlFile.getAbsolutePath()), result);
-                        //System.out.println(result);
-
 
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -235,7 +213,6 @@ public class Build implements Callable<Integer> {
     }
 
     private String getParameters(File file) {
-        //Map<String,String> tmp = new HashMap<>();
         try {
             BufferedReader reader = new BufferedReader(new FileReader(file.getPath()));
             String line;
@@ -251,16 +228,6 @@ public class Build implements Callable<Integer> {
         return "hello";
     }
 
-    /*public static void copyLayout(File layout, File page) throws IOException {
-        try (FileInputStream in = new FileInputStream(layout); FileOutputStream out = new FileOutputStream(page)) {
-            int n;
-            while ((n = in.read()) != -1) {
-                out.write(n);
-            }
-        }
-    }*/
-
-
     /**
      * Fonction convertissant le markdown en html
      * @param fileToConvert - fichier md
@@ -275,12 +242,7 @@ public class Build implements Callable<Integer> {
         Node document = parser.parse(fileString);
         HtmlRenderer renderer = HtmlRenderer.builder().build();
 
-        /*Path htmlPath = Path.of(newFile.getAbsolutePath());
-        Files.writeString(htmlPath, renderer.render(document));*/
         return renderer.render(document);
     }
 
-    public void generateFile(String content) {
-
-    }
 }
