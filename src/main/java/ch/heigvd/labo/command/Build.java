@@ -59,6 +59,7 @@ public class Build implements Callable<Integer> {
                 return 1;
             } else {
                 File menuFile = new File(dir + "/resources/menu.html");
+
                 boolean menu = this.constructMenu(dir, menuFile);
                 // Teste si le menu a pu être créé
                 if (!menu){
@@ -67,6 +68,20 @@ public class Build implements Callable<Integer> {
                 }
 
                 BufferedWriter writer = new BufferedWriter(new FileWriter(menuFile, true));
+                writer.write("</ul>\n");
+                writer.flush();
+                writer.close();
+
+                menuFile = new File(dir + "/resources/menuIndex.html");
+
+                menu = this.constructMenu(dir, menuFile);
+                // Teste si le menu a pu être créé
+                if (!menu){
+                    System.out.format("Le fichier menuIndex.html n'a pas pu être créé correctement.");
+                    return 1;
+                }
+
+                writer = new BufferedWriter(new FileWriter(menuFile, true));
                 writer.write("</ul>\n");
                 writer.flush();
                 writer.close();
@@ -105,7 +120,15 @@ public class Build implements Callable<Integer> {
                     this.constructMenu(newRoot, menu);
                 } else if (FilenameUtils.getExtension(fileName).equals("md") && !fileName.equals("index.md")) {
                     String page = fileName.substring(0, file.getName().length() - 3);
-                    String line = "\t<li><a href=\"/" + page + ".html\">" + page + "</a></li>\n";
+                    String line;
+                    if(menu.getName().equals("menuIndex.html")){
+                        line = "\t<li><a href=\"metadonnee/" + page + ".html\">" + page + "</a></li>\n";
+                    } else {
+                        line = "\t<li><a href=\"./" + page + ".html\">" + page + "</a></li>\n";
+                    }
+
+
+
 
                     writer.write(line);
                     writer.flush();
@@ -175,6 +198,11 @@ public class Build implements Callable<Integer> {
 
                     try {
                         var template = handlebars.compile("layout");
+                        if(fileName.equals("index.md")){
+                            System.out.println("BBBB"+fileName);
+                            template = handlebars.compile("layoutIndex");
+                        }
+
                         Map<String,Map<String,String>> elements = new HashMap<>();
 
                         Map<String,String> config = getParameters(new File("www/"+ siteDir.getPath() + "/config.yaml"));
