@@ -36,11 +36,11 @@ public class New implements Callable<Integer> {
             }
 
             // On ajoute un répertoire "metadonnee" dans lequel toutes les métadonnées seront stockées
-            File dir = new File(path + "/metadonnee");
+            File dir = new File(path + DIR_METADATA);
             path = dir.getPath();
 
-            if (!dir.mkdirs()) {
-                System.out.println("Le création du répertoire a échoué ou le répertoire existe déjà");
+            if (!dir.exists()) {
+                System.out.format("Le répertoire n'existe pas %s",dir.getName());
                 return 1;
             }
 

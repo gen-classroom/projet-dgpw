@@ -18,7 +18,7 @@ public class InitTest {
      * Test de la création d'un répertoire qui n'existe pas dans le projet
      * @throws Exception
      */
-    @Test
+    /*@Test
     @Order(1)
     void shouldCreateRepertory() throws Exception {
         int exitCode = new CommandLine(new Init()).execute("-d", "test_init");
@@ -26,13 +26,13 @@ public class InitTest {
         assertThrows(Exception.class, () -> {
             throw new Exception();
         });
-    }
+    }*/
 
     /**
      * Test de la création d'un répertoire qui existe déjà, la création doit échouer
      * @throws Exception
      */
-    @Test
+    /*@Test
     @Order(2)
     void shouldNotCreateRepertory() throws Exception {
         int exitCode = new CommandLine(new Init()).execute("-d", "test_init");
@@ -40,13 +40,13 @@ public class InitTest {
         assertThrows(Exception.class, () -> {
             throw new Exception();
         });
-    }
+    }*/
 
     /**
      * Une fois les tests terminés, le répertoire servant de test est supprimé
      * afin de ne pas surcharger le projet
      */
-    @AfterAll
+    /*@AfterAll
     static void cleanRepertoryTest(){
         File dir = new File("www/test_init");
         try {
@@ -54,6 +54,6 @@ public class InitTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
 }
