@@ -81,10 +81,10 @@ public class Build implements Callable<Integer> {
     }
 
     /**
-     *
-     * @param dir
-     * @param pathMenu
-     * @return
+     * Fonction qui va appeler la méthode de construction du menu
+     * @param dir Répertoire actuel
+     * @param pathMenu Chemin jusqu'au menu
+     * @return Retourne vrai si il a été possible de créé menu.html
      * @throws IOException
      */
     private boolean configMenu(File dir, String pathMenu) throws IOException {
@@ -106,10 +106,10 @@ public class Build implements Callable<Integer> {
     }
 
     /**
-     *
-     * @param root
-     * @param menu
-     * @return
+     * Fichier qui construit le menu.html
+     * @param root Répertoire dans lequel on se trouve
+     * @param menu Fichier menu.html
+     * @return Retourne vrai si la construction a réussi
      * @throws IOException
      */
     private boolean constructMenu(File root, File menu) throws IOException {
@@ -201,9 +201,9 @@ public class Build implements Callable<Integer> {
     }
 
     /**
-     *
-     * @param file
-     * @return
+     * Fonction qui retourne le header et le contenu d'un fichier
+     * @param file Fichier a parser
+     * @return header et contenu
      */
     private Map<String,String> getParameters(File file) {
         Map<String,String> map = new HashMap<>();
@@ -248,7 +248,7 @@ public class Build implements Callable<Integer> {
         com.github.jknack.handlebars.Handlebars handlebars = new com.github.jknack.handlebars.Handlebars(loader);
         handlebars.setPrettyPrint(true);
 
-        // Conversion du fichier md
+        // Conversion du fichier md en fichier html
         handlebars.registerHelper("convertMd", new Helper<String>() {
             @Override
             public Object apply(String s, Options options) throws IOException {
