@@ -156,9 +156,6 @@ public class Build implements Callable<Integer> {
                         return false;
                     }
 
-                    String content = this.convertFile(file, htmlFile);
-                    System.out.println("--------------" + content + "-------------");
-
                     //************************************************************* Handlebars
                     TemplateLoader loader = new FileTemplateLoader("www/"+ siteDir.getPath() + "/resources",".html");
                     com.github.jknack.handlebars.Handlebars handlebars = new com.github.jknack.handlebars.Handlebars(loader);
@@ -181,11 +178,10 @@ public class Build implements Callable<Integer> {
                         Map<String,Map<String,String>> elements = new HashMap<>();
 
                         Map<String,String> config = getParameters(new File("www/"+ siteDir.getPath() + "/config.yaml"));
-                        //Map<String,String> page = getParameters(file);
+                        Map<String,String> page = getParameters(file);
 
-                        String fileString = Files.readString(Path.of(file.getAbsolutePath()));
                         elements.put("config",config);
-                        //elements.put("page", page);
+                        elements.put("page", page);
 
                         var context = Context
                                 .newBuilder(elements)
@@ -200,10 +196,7 @@ public class Build implements Callable<Integer> {
                     }
 
                     //************************************************************* Handlebars
-
                     System.out.println("Reussi");
-
-
 
                     // Copie des autres fichiers (image par exemple)
                 } else if (!FilenameUtils.getExtension(fileName).equals("yaml") && !fileName.equals("build") && !fileName.equals("resources")) {
@@ -227,19 +220,15 @@ public class Build implements Callable<Integer> {
             StringBuilder content = new StringBuilder();
             boolean header = false;
             while((line = reader.readLine()) != null) {
-
-                while(line != null && !line.equals("==")) {
-                    // On récupère le nom du champ et sa valeur (p.ex "auteur" : "Michel J.")
-                    String[] s = line.split(":");
-                    map.put(s[0], s[1]);
-                    line = reader.readLine();
+                if(line.contains("==")){
                     header = true;
                 }
-                // On récupère le contenu de l'article
-                if(line != null && !line.equals("==")){
-                    content.append(line);
+                else if(header == true){
+                    content.append(line).append("\n");
+                }else {
+                    String[] s = line.split(":");
+                    map.put(s[0], s[1]);
                 }
-
             }
             if(header) {
                 map.put("content", String.valueOf(content));
@@ -251,22 +240,4 @@ public class Build implements Callable<Integer> {
 
         return map;
     }
-
-    /**
-     * Fonction convertissant le markdown en html
-     * @param fileToConvert - fichier md
-     * @param newFile - fichier html
-     * @throws IOException
-     */
-    public String convertFile(File fileToConvert, File newFile) throws IOException {
-        Path filePath = Path.of(fileToConvert.getAbsolutePath());
-        String fileString = Files.readString(filePath);
-
-        Parser parser = Parser.builder().build();
-        Node document = parser.parse(fileString);
-        HtmlRenderer renderer = HtmlRenderer.builder().build();
-
-        return renderer.render(document);
-    }
-
 }
