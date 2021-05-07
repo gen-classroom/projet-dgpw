@@ -178,13 +178,17 @@ public class Build implements Callable<Integer> {
 
                     try {
                         var template = handlebars.compile("layout");
-                        Map<String,String> config = new HashMap<>();
-                        config.put("title", getParameters(new File("www/"+ siteDir.getPath() + "/config.yaml")));
+                        Map<String,Map<String,String>> elements = new HashMap<>();
+
+                        Map<String,String> config = getParameters(new File("www/"+ siteDir.getPath() + "/config.yaml"));
+                        Map<String,String> page = getParameters(file);
+
                         String fileString = Files.readString(Path.of(file.getAbsolutePath()));
-                        config.put("content", fileString);
+                        elements.put("config",config);
+                        elements.put("page", page);
 
                         var context = Context
-                                .newBuilder(config)
+                                .newBuilder(elements)
                                 .resolver(MapValueResolver.INSTANCE)
                                 .build();
 
@@ -198,6 +202,9 @@ public class Build implements Callable<Integer> {
                     //************************************************************* Handlebars
 
                     System.out.println("Reussi");
+
+
+
                     // Copie des autres fichiers (image par exemple)
                 } else if (!FilenameUtils.getExtension(fileName).equals("yaml") && !fileName.equals("build") && !fileName.equals("resources")) {
                     System.out.println("Copie " + fileName + ": ");
@@ -212,20 +219,37 @@ public class Build implements Callable<Integer> {
         return true;
     }
 
-    private String getParameters(File file) {
+    private Map<String,String> getParameters(File file) {
+        Map<String,String> map = new HashMap<>();
         try {
             BufferedReader reader = new BufferedReader(new FileReader(file.getPath()));
             String line;
+            StringBuilder content = new StringBuilder();
+            boolean header = false;
             while((line = reader.readLine()) != null) {
-                if(line.contains("title")){
+
+                while(line != null && !line.equals("==")) {
+                    // On récupère le nom du champ et sa valeur (p.ex "auteur" : "Michel J.")
                     String[] s = line.split(":");
-                    return s[1];
+                    map.put(s[0], s[1]);
+                    line = reader.readLine();
+                    header = true;
                 }
+                // On récupère le contenu de l'article
+                if(!line.equals("==")){
+                    content.append(line);
+                }
+
             }
+            if(header) {
+                map.put("content", String.valueOf(content));
+            }
+
         }catch(IOException e){
             e.printStackTrace();
         }
-        return "hello";
+
+        return map;
     }
 
     /**

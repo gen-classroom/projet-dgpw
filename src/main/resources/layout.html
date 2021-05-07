@@ -1,10 +1,10 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>{{ title }}</title>
+    <title>{{ config.title }} | {{ page.title}}</title>
 </head>
 <body>
     {{> menu }}
-    {{{ convertMd content }}}
+    {{{ convertMd page.content }}}
 </body>
 </html>
