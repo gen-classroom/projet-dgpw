@@ -1,15 +1,20 @@
 package ch.heigvd.labo.command;
 import static ch.heigvd.labo.Utility.*;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
+import java.io.*;
+import java.nio.Buffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Hashtable;
+import java.util.Map;
 import java.util.concurrent.Callable;
+import java.util.HashMap;
 
-import java.io.File;
-import java.io.IOException;
-
+import com.github.jknack.handlebars.*;
+import com.github.jknack.handlebars.context.MapValueResolver;
+import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
+import com.github.jknack.handlebars.io.FileTemplateLoader;
+import com.github.jknack.handlebars.io.TemplateLoader;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import picocli.CommandLine;
@@ -121,7 +126,6 @@ public class Build implements Callable<Integer> {
     }
 
 
-
     /**
      *
      * @param root - racine du répertoire
@@ -159,7 +163,62 @@ public class Build implements Callable<Integer> {
                         return false;
                     }
 
+                    //copyLayout(new File("src/main/resources/layout.html"), file);
+
                     String content = this.convertFile(file, htmlFile);
+                    System.out.println("--------------" + content + "-------------");
+
+                    //************************************************************* Handlebars
+                    TemplateLoader loader = new FileTemplateLoader("www/"+ siteDir.getPath() + "/resources",".html");
+                    com.github.jknack.handlebars.Handlebars handlebars = new com.github.jknack.handlebars.Handlebars(loader);
+                    handlebars.setPrettyPrint(true);
+
+                   /* handlebars.registerHelper("md", new Helper<String>() {
+                        @Override
+                        public Object apply(String s, Options options) throws IOException {
+                            //Path filePath = Path.of(fileToConvert.getAbsolutePath());
+                            //String fileString = Files.readString(filePath);
+                            //System.out.println(s);
+
+                            Parser parser = Parser.builder().build();
+                            Node document = parser.parse(s);
+                            HtmlRenderer renderer = HtmlRenderer.builder().build();
+
+                            //Path htmlPath = Path.of("www/"+ siteDir.getPath() +"/test.html");
+                            //Files.writeString(htmlPath, renderer.render(document));
+                            return renderer.render(document);
+                        }
+                    });*/
+
+                    try {
+                        var template = handlebars.compile("layout");
+                        Map<String,String> config = new HashMap<>();
+                        config.put("title", getParameters(new File("www/"+ siteDir.getPath() + "/config.yaml")));
+                        //Path filePath = Path.of(fileToConvert.getAbsolutePath());
+                        String fileString = Files.readString(Path.of(file.getAbsolutePath()));
+                        config.put("content", content);
+
+                        var context = Context
+                                .newBuilder(config)
+                                .resolver(MapValueResolver.INSTANCE)
+                                .build();
+
+                        //fieldValueResolver
+
+                        //Path htmlPath = Path.of("www/"+ siteDir.getPath() +"resources/ + );
+
+                        var result = template.apply(context);
+
+                        Files.writeString(Path.of(htmlFile.getAbsolutePath()), result);
+                        //System.out.println(result);
+
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    //************************************************************* Handlebars
+
                     System.out.println("Reussi");
                     // Copie des autres fichiers (image par exemple)
                 } else if (!FilenameUtils.getExtension(fileName).equals("yaml") && !fileName.equals("build") && !fileName.equals("resources")) {
@@ -174,6 +233,33 @@ public class Build implements Callable<Integer> {
         }
         return true;
     }
+
+    private String getParameters(File file) {
+        //Map<String,String> tmp = new HashMap<>();
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(file.getPath()));
+            String line;
+            while((line = reader.readLine()) != null) {
+                if(line.contains("title")){
+                    String[] s = line.split(":");
+                    return s[1];
+                }
+            }
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+        return "hello";
+    }
+
+    /*public static void copyLayout(File layout, File page) throws IOException {
+        try (FileInputStream in = new FileInputStream(layout); FileOutputStream out = new FileOutputStream(page)) {
+            int n;
+            while ((n = in.read()) != -1) {
+                out.write(n);
+            }
+        }
+    }*/
+
 
     /**
      * Fonction convertissant le markdown en html
