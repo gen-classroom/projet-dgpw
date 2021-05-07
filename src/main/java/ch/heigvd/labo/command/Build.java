@@ -181,11 +181,11 @@ public class Build implements Callable<Integer> {
                         Map<String,Map<String,String>> elements = new HashMap<>();
 
                         Map<String,String> config = getParameters(new File("www/"+ siteDir.getPath() + "/config.yaml"));
-                        Map<String,String> page = getParameters(file);
+                        //Map<String,String> page = getParameters(file);
 
                         String fileString = Files.readString(Path.of(file.getAbsolutePath()));
                         elements.put("config",config);
-                        elements.put("page", page);
+                        //elements.put("page", page);
 
                         var context = Context
                                 .newBuilder(elements)
@@ -236,7 +236,7 @@ public class Build implements Callable<Integer> {
                     header = true;
                 }
                 // On récupère le contenu de l'article
-                if(!line.equals("==")){
+                if(line != null && !line.equals("==")){
                     content.append(line);
                 }
 
