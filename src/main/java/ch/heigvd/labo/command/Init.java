@@ -19,7 +19,7 @@ import static ch.heigvd.labo.Utility.*;
 public class Init implements Callable<Integer> {
 
     @Option(names = "-d", description = "Répertoire du site statique")
-    static File file;
+    private File file;
 
     @Override public Integer call() throws IOException {
         //Vérifie que le répertoire est renseigné

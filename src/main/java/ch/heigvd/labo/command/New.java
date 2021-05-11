@@ -15,10 +15,10 @@ import static ch.heigvd.labo.Utility.*;
 @Command(name = "new", description ="Création d'une nouvelle page")
 public class New implements Callable<Integer> {
     @Option(names = "-f", description = "Nom de la page")
-    static File filePage;
+    private File filePage;
 
     @Option(names = "-d", description = "Répertoire du site statique")
-    static File dirStatic;
+    private File dirStatic;
 
     private static String path = "";
 
