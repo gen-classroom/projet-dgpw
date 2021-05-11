@@ -181,10 +181,14 @@ public class Build implements Callable<Integer> {
                         return false;
                     }
 
-                    // Appel à HandleBars pour le générateur de template
-                    handleBars(file, htmlFile);
-
                     System.out.println("Reussi");
+
+                    // Appel à HandleBars pour le générateur de template
+                    boolean handlebars = handleBars(file, htmlFile);
+                    if(!handlebars){
+                        System.out.format("Handlebars a échoué lors du build");
+                        return false;
+                    }
 
                     // Copie des autres fichiers (image par exemple)
                 } else if (!FilenameUtils.getExtension(fileName).equals("yaml") && !fileName.equals("build") && !fileName.equals("resources")) {
@@ -218,7 +222,7 @@ public class Build implements Callable<Integer> {
                     // Séparation du header et contenu
                     header = true;
                 }
-                else if(header == true){
+                else if(header){
                     // Contenu du fichier
                     content.append(line).append("\n");
                 }else {
@@ -240,8 +244,9 @@ public class Build implements Callable<Integer> {
      * Fonction qui utilise HandleBars et gèrent l'injection des données dans le fichier html
      * @param file Fichier à injecter dans la page html finale
      * @param htmlFile Fichier html
+     * @return Retourne vrai si la passage dans handleBars a fonctionné
      */
-    private void handleBars(File file,File htmlFile) {
+    private boolean handleBars(File file,File htmlFile) {
 
         String fileName = file.getName();
         TemplateLoader loader = new FileTemplateLoader("www/"+ siteDir.getPath() + "/resources",".html");
@@ -285,6 +290,8 @@ public class Build implements Callable<Integer> {
 
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
         }
+        return true;
     }
 }
