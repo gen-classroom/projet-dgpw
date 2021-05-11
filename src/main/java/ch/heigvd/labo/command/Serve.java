@@ -10,10 +10,10 @@ import picocli.CommandLine.Command;
 @Command(name = "serve", description ="Compilation du site dans un navigateur Web")
 public class Serve implements Callable {
     @CommandLine.Option(names = "-new", description = "")
-    static Boolean newOption = false;
+    private Boolean newOption;
 
     @CommandLine.Option(names = "-init", description = "")
-    static Boolean initOption  = false;
+    private Boolean initOption;
 
     @CommandLine.Option(names = "-f", description = "Nom de la page")
     static File filePage;
@@ -30,7 +30,7 @@ public class Serve implements Callable {
                 result = new CommandLine(new Init()).execute("-d", dirStatic.getPath());
                 if(result != 0) {
                     System.out.println("Une erreur s'est produite durant le init");
-                    return 2;
+                    return 3;
                 }
             }
 
@@ -51,7 +51,7 @@ public class Serve implements Callable {
             result = new CommandLine(new Build()).execute("-d", dirStatic.getPath());
             if(result != 0) {
                 System.out.println("Une erreur s'est produite durant le build");
-                return 2;
+                return 4;
             }
             System.out.println("Vous pouvez accéder au site web via " + Utility.LOCALHOST+Utility.DIR_ROOT+dirStatic.getPath()+Utility.DIR_BUILD +"/index.html");
             return 0;

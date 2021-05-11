@@ -12,15 +12,15 @@ import java.io.IOException;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class NewTest {
     private final ByteArrayOutputStream output = new ByteArrayOutputStream();
-    static final String DIR_SITE_TEST = "test_init";
+    static final String DIR_SITE_TEST = "test_new";
 
     /**
      * Création d'un répertoire test
      */
     @BeforeAll
     static void createRepertoryTest() throws Exception{
-        int exitCode = new CommandLine(new Serve()).execute("-init", "-d", "test_init");
-        File dir = new File("www/" + DIR_SITE_TEST + "/build");
+        int exitCode = new CommandLine(new Serve()).execute("-init", "-d", "test_new");
+        File dir = new File("www/" + DIR_SITE_TEST);
         try {
             if (!dir.exists()) {
                 throw new IOException("Impossible de créer le répertoire");
@@ -79,7 +79,8 @@ public class NewTest {
     @Test
     @Order(4)
     void shouldCreateFile() throws Exception {
-        int exitCode = new CommandLine(new New()).execute("-f", "mapremierepage", "-d" , "test_init");
+
+        int exitCode = new CommandLine(new New()).execute("-f", "mapremierepage", "-d" , "test_new");
         assertEquals(exitCode, 0);
         assertThrows(Exception.class, () -> {
             throw new Exception();
@@ -93,7 +94,7 @@ public class NewTest {
     @Test
     @Order(5)
     void shouldNotCreateFile() throws Exception {
-        int exitCode = new CommandLine(new New()).execute("-f", "mapremierepage", "-d" , "test_init");
+        int exitCode = new CommandLine(new New()).execute("-f", "mapremierepage", "-d" , "test_new");
         assertEquals(exitCode, 1);
         assertThrows(Exception.class, () -> {
             throw new Exception();
@@ -106,7 +107,7 @@ public class NewTest {
      */
     @AfterAll
     static void cleanRepertoryTest() {
-        File dir = new File("www/test_init");
+        File dir = new File("www/test_new");
         try {
             FileUtils.deleteDirectory(dir);
         } catch (IOException e) {
