@@ -12,14 +12,14 @@ import org.apache.commons.io.FileUtils;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class CleanTest {
-    static final String DIR_SITE_TEST = "test_init";
+    static final String DIR_SITE_TEST = "test_clean";
 
     /**
      * Création d'un répertoire test
      */
     @BeforeAll
     static void createRepertoryTest() throws Exception{
-        int exitCode = new CommandLine(new Serve()).execute("-init", "-d", "test_init");
+        int exitCode = new CommandLine(new Serve()).execute("-init", "-d", "test_clean");
         File dir = new File("www/" + DIR_SITE_TEST + "/build");
         try {
             if (!dir.exists()) {
@@ -75,7 +75,7 @@ public class CleanTest {
      */
     @AfterAll
     static void cleanRepertoryTest(){
-        File dir = new File("www/test_init");
+        File dir = new File("www/test_clean");
         try {
             FileUtils.deleteDirectory(dir);
         } catch (IOException e) {

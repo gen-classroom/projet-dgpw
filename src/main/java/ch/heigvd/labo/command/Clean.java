@@ -14,7 +14,7 @@ import static ch.heigvd.labo.Utility.*;
 public class Clean implements Callable<Integer> {
 
     @CommandLine.Option(names = "-d", description = "Chemin du répertoire du site statique à nettoyer")
-    static File dir;
+    private File dir;
 
     @Override public Integer call() throws IOException{
         File dirS = new File(DIR_ROOT + dir.getPath());

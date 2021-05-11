@@ -26,7 +26,7 @@ import org.commonmark.renderer.html.HtmlRenderer;
 public class Build implements Callable<Integer> {
 
     @CommandLine.Option(names = "-d", description = "Répertoire du site statique")
-    static File siteDir;
+    private File siteDir;
 
     @Override public Integer call() throws IOException {
         if(siteDir != null){
