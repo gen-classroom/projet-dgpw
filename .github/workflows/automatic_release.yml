@@ -1,0 +1,29 @@
+name: "Auto release"
+
+on:
+  push:
+    tags:
+      -"v*" # Push when tag with version
+      
+jobs:
+  tagged-release:
+    name: "Tagged Release"
+    runs-on: "ubuntu-latest"
+    
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: "Create package"
+        run: |
+             mvn clean package
+             echo "done"
+             
+        - uses: "marvinpinto/action-automatic-releases@latest"
+          with:
+            repo_token: "${{secrets.GITHUB_TOKEN}}"
+            prerelease: false
+            files: |
+              target/dgpw.zip
+    
+    
+    
