@@ -19,7 +19,7 @@ import static ch.heigvd.labo.Utility.*;
 public class Init implements Callable<Integer> {
 
     @Option(names = "-d", description = "Répertoire du site statique")
-    static File file;
+    private File file;
 
     @Override public Integer call() throws IOException {
         //Vérifie que le répertoire est renseigné
@@ -29,7 +29,8 @@ public class Init implements Callable<Integer> {
         }
 
         File dir = new File(DIR_ROOT + file.getPath());
-        if (!dir.mkdirs()) {
+        dir.mkdirs();
+        if (!dir.exists()) {
             System.out.println("La création du répertoire a échoué ou le répertoire existe déjà");
             return 1;
         } else {
@@ -37,8 +38,8 @@ public class Init implements Callable<Integer> {
 
             // On ajoute un répertoire "metadonnee" dans lequel toutes les métadonnées seront stockées
             File metadataDir = new File(dir.toString() + DIR_METADATA);
-
-            if (!metadataDir.mkdirs()) {
+            metadataDir.mkdirs();
+            if (!metadataDir.exists()) {
                 System.out.format("Le répertoire n'existe pas %s", metadataDir.getName());
                 return 1;
             }

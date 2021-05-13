@@ -12,53 +12,54 @@ import org.apache.commons.io.FileUtils;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class CleanTest {
-    static final String DIR_TO_REMOVE = "test_clean";
+    static final String DIR_SITE_TEST = "test_clean";
 
     /**
      * Création d'un répertoire test
      */
-    //@BeforeAll
-    /*static void createRepertoryTest() throws Exception{
-        File dir = new File("www/" + DIR_TO_REMOVE + "/build");
+    @BeforeAll
+    static void createRepertoryTest() throws Exception{
+        int exitCode = new CommandLine(new Serve()).execute("-init", "-d", "test_clean");
+        File dir = new File("www/" + DIR_SITE_TEST + "/build");
         try {
-            if (!dir.mkdirs()) {
+            if (!dir.exists()) {
                 throw new IOException("Impossible de créer le répertoire");
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }*/
+    }
 
     /**
      * Suppression d'un répertoire existant
     */
-    //@Test
-    //@Order(1)
-    /*void shouldDeleteExistantRepertoryBuild()throws Exception{
-        int exitCode = new CommandLine(new Clean()).execute("-d", DIR_TO_REMOVE);
+    @Test
+    @Order(1)
+    void shouldDeleteExistantRepertoryBuild()throws Exception{
+        int exitCode = new CommandLine(new Clean()).execute("-d", DIR_SITE_TEST);
         assertEquals(exitCode, 0);
         assertThrows(IOException.class, () -> {
             throw new IOException("Impossible de supprimer le répertoire");
         });
-    }*/
+    }
 
     /**
      * Suppression d'un répertoire build inexistant, retourne une erreur
      */
-    /*@Test
+    @Test
     @Order(2)
     void shouldNotDeleteInexistantRepertoryBuild() throws Exception {
-        int exitCode = new CommandLine(new Clean()).execute("-d", DIR_TO_REMOVE);
+        int exitCode = new CommandLine(new Clean()).execute("-d", DIR_SITE_TEST);
         assertEquals(exitCode, 2);
         assertThrows(IOException.class, () -> {
             throw new IOException("Le répertoire est inexistant");
         });
-    }*/
+    }
 
     /**
      * Suppression d'un répertoire inexistant, retourne une erreur
     */
-    /*@Test
+    @Test
     @Order(3)
     void shouldNotDeleteInexistantRepertory() throws Exception {
         int exitCode = new CommandLine(new Clean()).execute("-d", "inexistant");
@@ -66,13 +67,13 @@ public class CleanTest {
         assertThrows(IOException.class, () -> {
             throw new IOException("Le répertoire est inexistant");
         });
-    }*/
+    }
 
     /**
      * Une fois les tests terminés, le répertoire servant de test est supprimé
      * afin de ne pas surcharger le projet
      */
-    /*@AfterAll
+    @AfterAll
     static void cleanRepertoryTest(){
         File dir = new File("www/test_clean");
         try {
@@ -80,6 +81,6 @@ public class CleanTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }*/
+    }
 
 }

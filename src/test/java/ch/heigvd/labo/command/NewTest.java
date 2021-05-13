@@ -12,12 +12,29 @@ import java.io.IOException;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class NewTest {
     private final ByteArrayOutputStream output = new ByteArrayOutputStream();
+    static final String DIR_SITE_TEST = "test_new";
+
+    /**
+     * Création d'un répertoire test
+     */
+    @BeforeAll
+    static void createRepertoryTest() throws Exception{
+        int exitCode = new CommandLine(new Serve()).execute("-init", "-d", "test_new");
+        File dir = new File("www/" + DIR_SITE_TEST);
+        try {
+            if (!dir.exists()) {
+                throw new IOException("Impossible de créer le répertoire");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * Test qui n'a aucun argument en paramètres, la commande retourne une erreur
      * @throws Exception
      */
-    /*@Test
+    @Test
     @Order(1)
     void shouldCreateErrorNoArgument() throws Exception {
         int exitCode = new CommandLine(new New()).execute();
@@ -25,13 +42,13 @@ public class NewTest {
         assertThrows(Exception.class, () -> {
             throw new Exception();
         });
-    }*/
+    }
 
     /**
      * Test qui prend en paramètres un seul argument, il devrait prendre deux arguments normalement
      * @throws Exception
      */
-   /* @Test
+    @Test
     @Order(2)
     void shouldCreateErrorOneArgument() throws Exception {
         int exitCode = new CommandLine(new New()).execute("-f", "mapremierepage");
@@ -39,63 +56,62 @@ public class NewTest {
         assertThrows(Exception.class, () -> {
             throw new Exception();
         });
-    }*/
+    }
 
     /**
      * Test qui prend en paramètre un répertoire du site statique qui n'existe pas
      * @throws Exception
      */
-   /* @Test
+    @Test
     @Order(3)
     void shouldCreateErrorDirDoesntExist() throws Exception {
-        int exitCode = new CommandLine(new New()).execute("-f", "mapremierepage", "-d" , "test/");
+        int exitCode = new CommandLine(new New()).execute("-f", "mapremierepage", "-d" , "test");
         assertEquals(exitCode, 1);
         assertThrows(Exception.class, () -> {
             throw new Exception();
         });
-    }*/
+    }
 
     /**
      * Test qui crée la page correctement
      * @throws Exception
      */
-   /* @Test
+    @Test
     @Order(4)
     void shouldCreateFile() throws Exception {
-        File test = new File("www/test/");
-        test.mkdirs();
-        int exitCode = new CommandLine(new New()).execute("-f", "mapremierepage", "-d" , "test/");
+
+        int exitCode = new CommandLine(new New()).execute("-f", "mapremierepage", "-d" , "test_new");
         assertEquals(exitCode, 0);
         assertThrows(Exception.class, () -> {
             throw new Exception();
         });
-    }*/
+    }
 
     /**
      * Test qui ne devrait pas recréer une page car elle existe déjà, une erreur est retournée
      * @throws Exception
      */
-    /*@Test
+    @Test
     @Order(5)
     void shouldNotCreateFile() throws Exception {
-        int exitCode = new CommandLine(new New()).execute("-f", "mapremierepage", "-d" , "test/");
+        int exitCode = new CommandLine(new New()).execute("-f", "mapremierepage", "-d" , "test_new");
         assertEquals(exitCode, 1);
         assertThrows(Exception.class, () -> {
             throw new Exception();
         });
-    }*/
+    }
 
     /**
      * Après que tous les tests aient été effectués, on nettoie tout le répertoire test
      * -> www/mon/site/mapremierepage.md
      */
-    /*@AfterAll
+    @AfterAll
     static void cleanRepertoryTest() {
-        File dir = new File("www/test");
+        File dir = new File("www/test_new");
         try {
             FileUtils.deleteDirectory(dir);
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }*/
+    }
 }
