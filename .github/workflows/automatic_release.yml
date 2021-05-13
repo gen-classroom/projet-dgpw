@@ -30,12 +30,12 @@ jobs:
           release_name: Release ${{ github.ref }}
           draft: false
           prerelease: false
-      - name: Upload asset
-        uses: actions/upload-rlease-asset@v1
+      - name: Upload release asset
+        uses: actions/upload-release-asset@v1
         env:
            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create_release.outputs.uplaod.url }}
+          upload_url: ${{ steps.create_release.outputs.upload.url }}
           asset_path: target/dgpw.zip
           asset_name: dgpw.zip
           asset_content_type: application/zip
