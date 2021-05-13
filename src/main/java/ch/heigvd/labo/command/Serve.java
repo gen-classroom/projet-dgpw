@@ -9,10 +9,10 @@ import picocli.CommandLine.Command;
 
 @Command(name = "serve", description ="Compilation du site dans un navigateur Web")
 public class Serve implements Callable {
-    @CommandLine.Option(names = "-new", description = "")
+    @CommandLine.Option(names = "-new", description = "Création d'une page")
     private Boolean newOption;
 
-    @CommandLine.Option(names = "-init", description = "")
+    @CommandLine.Option(names = "-init", description = "Initialisation du site statique")
     private Boolean initOption;
 
     @CommandLine.Option(names = "-f", description = "Nom de la page")
