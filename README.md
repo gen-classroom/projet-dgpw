@@ -35,7 +35,7 @@ Commands:
   new    Création d'une nouvelle page
   clean  Nettoie le répertoire build du site statique.
   build  Compile un site statique
-  serve  Serve .... ???
+  serve  Compilation du site dans un navigateur Web
   init   Initialise un répertoire de site statique
 ````
 ------
