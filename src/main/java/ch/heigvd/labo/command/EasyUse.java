@@ -54,7 +54,6 @@ public class EasyUse implements Callable {
                 System.out.println("Une erreur s'est produite durant le build");
                 return 4;
             }
-            System.out.println("Vous pouvez accéder au site web via " + Utility.LOCALHOST+Utility.DIR_ROOT+dirStatic.getPath()+Utility.DIR_BUILD +"/index.html");
             return 0;
         }
         System.out.println("Merci de renseigner le nom du répertoire et/ou du fichier à créer : \n-d [nom du répertoire] \n-f [nom du fichier]");
