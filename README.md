@@ -35,7 +35,7 @@ Commands:
   new    Création d'une nouvelle page
   clean  Nettoie le répertoire build du site statique.
   build  Compile un site statique
-  serve  Serve .... ???
+  serve  Compilation du site dans un navigateur Web
   init   Initialise un répertoire de site statique
 ````
 ------
@@ -54,7 +54,57 @@ Programme DGPW - Website Generator
 DGPW version X.X.X-SNAPSHOT
 ````
 
+### Servir le site
+
+Nous avons décidé d'ajouter une commande qui réunisse toutes les commandes; les deux commandes appellent directement la commande `build` afin de compiler le site statique et permettre l'accès via le navigateur. 
+
+````bash
+Usage: Main serve [-init] [-new] [-d=<dirStatic>] [-f=<filePage>]
+Compilation du site dans un navigateur Web
+  -d=<dirStatic>    Répertoire du site statique
+  -f=<filePage>     Nom de la page
+      -init         Initialisation du site statique
+      -new          Création d'une page
+````
+
+Afin d'initialiser le site et directement le builder:
+
+````bash
+> dgpw serve -init -d test_unit
+
+# Affichage
+Le répertoire a été créé
+Le fichier de config a été créé : /../../../../../projet-dgpw/www/test_unit/config.yaml
+Le fichier d'index a été créé : /../../../../../projet-dgpw/www/test_unit/index.md
+Conversion index.md: Reussi
+Creation metadonnee: Reussi
+Compilation terminée !
+Vous pouvez accéder au site web via http://localhost:63342/my-app/www/test_unit/build/index.html
+````
+
+Afin de créer une page et directement builder le site statique:
+
+````bash
+> dgpw serve -new -d test_unit -f new
+
+# Affichage
+La page voulue, new.md, a été créée
+Le répertoire build du site test_unit a été supprimé.
+Conversion index.md: Reussi
+Creation metadonnee: Reussi
+Conversion new.md: Reussi
+Compilation terminée !
+Vous pouvez accéder au site web via http://localhost:63342/my-app/www/test_unit/build/index.html
+````
+
+> /!\ Le nom de la page ne doit pas avoir d'extension. 
+
+------
+
+Si vous préférez effectuer les commandes une à une, il est également possible de le faire des manières suivantes:
+
 ### Initialisation du site
+
 Pour initialiser le site statique, utiliser la commande `init` :
 
 ````bash
