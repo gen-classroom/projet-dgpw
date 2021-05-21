@@ -19,7 +19,7 @@ public class CleanTest {
      */
     @BeforeAll
     static void createRepertoryTest() throws Exception{
-        int exitCode = new CommandLine(new Serve()).execute("-init", "-d", "test_clean");
+        int exitCode = new CommandLine(new EasyUse()).execute("-init", "-d", "test_clean");
         File dir = new File("www/" + DIR_SITE_TEST + "/build");
         try {
             if (!dir.exists()) {
@@ -29,7 +29,7 @@ public class CleanTest {
             e.printStackTrace();
         }
     }
-    
+
 
     /**
      * Suppression d'un répertoire existant

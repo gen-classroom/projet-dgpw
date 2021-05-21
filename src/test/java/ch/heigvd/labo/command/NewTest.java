@@ -19,7 +19,7 @@ public class NewTest {
      */
     @BeforeAll
     static void createRepertoryTest() throws Exception{
-        int exitCode = new CommandLine(new Serve()).execute("-init", "-d", "test_new");
+        int exitCode = new CommandLine(new EasyUse()).execute("-init", "-d", "test_new");
         File dir = new File("www/" + DIR_SITE_TEST);
         try {
             if (!dir.exists()) {
