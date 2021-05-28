@@ -7,6 +7,7 @@ import java.nio.file.Path;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 import com.github.jknack.handlebars.*;
 import com.github.jknack.handlebars.context.MapValueResolver;
@@ -25,15 +26,17 @@ import org.commonmark.renderer.html.HtmlRenderer;
 
 @Command(name = "build", description ="Compile un site statique")
 
+@BenchmarkMode(Mode.AverageTime)
+@OutputTimeUnit(TimeUnit.NANOSECONDS)
+@State(Scope.Benchmark)
 public class Build implements Callable<Integer> {
 
     @CommandLine.Option(names = "-d", description = "Répertoire du site statique")
     private File siteDir;
 
     @Benchmark
-    @Fork(value = 1, warmups = 2)
-    @BenchmarkMode(Mode.AverageTime)
-    @Override public Integer call() throws IOException {
+    @Override
+    public Integer call() throws IOException {
         if(siteDir != null){
             File dir = new File(DIR_ROOT + siteDir.getPath());
 
