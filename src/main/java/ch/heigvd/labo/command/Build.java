@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.HashMap;
 
+import ch.heigvd.labo.fileWatcher.FileWatcher;
 import com.github.jknack.handlebars.*;
 import com.github.jknack.handlebars.context.MapValueResolver;
 import com.github.jknack.handlebars.io.FileTemplateLoader;
@@ -28,56 +29,73 @@ public class Build implements Callable<Integer> {
     @CommandLine.Option(names = "-d", description = "Répertoire du site statique")
     private File siteDir;
 
+    @CommandLine.Option(names = "--watch", description = "Contrôle continue")
+    private boolean watch;
+
     @Override public Integer call() throws IOException {
-        if(siteDir != null){
-            File dir = new File(DIR_ROOT + siteDir.getPath());
-
-            // Vérifie que le répertoire du site est existant
-            if (!dir.exists()) {
-                System.out.format("Impossible d'accéder au répertoire %s. Celui-ci est inexistant.\n", dir.getName());
-                return 1;
-            }
-
-            File dirBuild = new File(dir.getAbsolutePath() + "/build");
-            // Teste si le repertoire build existe déjà et le supprime
-            if (dirBuild.exists()){
-                // Appel fonction clean
-                new CommandLine(new Clean()).execute("-d", siteDir.getPath());
-            }
-
-            // Création du répertoire "template" pour y insérer les fichiers .html
-            try {
-                FileUtils.copyDirectoryToDirectory(new File("src/main/resources"), dir);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            boolean creationBuild = dirBuild.mkdir();
-            // Teste si le répertoire build s'est bien créé
-            if(!creationBuild){
-                System.out.format("Le répertoire build ne s'est pas créé.");
-                return 1;
-            } else {
-                // Création des menus pour les fichiers de metadonnee et le fichier index
-                boolean menu = this.configMenu(dir, "/resources/menu.html");
-                if (!menu) return 1;
-                boolean menuIndex = this.configMenu(dir, "/resources/menuIndex.html");
-                if(!menuIndex) return 1;
-
-                // Création de la structure build
-                boolean creationStructure = this.listDirectory(dir, dirBuild);
-                // Teste si la structure a pu être recréée
-                if (!creationStructure){
-                    System.out.format("La structure n'a pas pu être créée correctement.");
-                    return 1;
-                }
-            }
-            System.out.format("Compilation terminée !\n");
-            return 0;
-        } else {
+        if(siteDir == null) {
             System.out.println("Merci de renseigner le nom du répertoire à créer : \n-d [nom du répertoire]");
             return 1;
         }
+
+        File dir = new File(DIR_ROOT + siteDir.getPath());
+        // Vérifie que le répertoire du site est existant
+        if (!dir.exists()) {
+            System.out.format("Impossible d'accéder au répertoire %s. Celui-ci est inexistant.\n", dir.getName());
+            return 1;
+        }
+
+        File dirBuild = new File(dir.getAbsolutePath() + "/build");
+        // Teste si le repertoire build existe déjà et le supprime
+        if (dirBuild.exists()) {
+            // Appel fonction clean
+            new CommandLine(new Clean()).execute("-d", siteDir.getPath());
+        }
+
+        // Création du répertoire "template" pour y insérer les fichiers .html
+        try {
+            FileUtils.copyDirectoryToDirectory(new File("src/main/resources"), dir);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Appel de la classe pour observer modifications sur système de fichiers
+        //FileWatcher fileWatcher = new FileWatcher(siteDir + "/metadonnee");
+        // Si le paramètre --watch est ajouté
+        if(watch){
+            //while(fileWatcher.watch())
+                buibuild(dirBuild, dir);
+        }
+        else {
+        }
+        return buibuild(dirBuild, dir);
+
+    }
+
+    private int buibuild(File dirBuild, File dir){
+        boolean creationBuild = dirBuild.mkdir();
+        // Teste si le répertoire build s'est bien créé
+        if(!creationBuild){
+            System.out.format("Le répertoire build ne s'est pas créé.");
+            return 1;
+        } else {
+            // Création des menus pour les fichiers de metadonnee et le fichier index
+            /*boolean menu = this.configMenu(dir, "/resources/menu.html");
+            if (!menu) return 1;
+            boolean menuIndex = this.configMenu(dir, "/resources/menuIndex.html");
+            if(!menuIndex) return 1;
+
+            // Création de la structure build
+            boolean creationStructure = this.listDirectory(dir, dirBuild);
+            // Teste si la structure a pu être recréée
+            if (!creationStructure){
+                System.out.format("La structure n'a pas pu être créée correctement.");
+                return 1;
+            }*/
+        }
+        System.out.format("Compilation terminée !\n");
+        return 0;
+
     }
 
     /**
