@@ -26,15 +26,11 @@ import org.commonmark.renderer.html.HtmlRenderer;
 
 @Command(name = "build", description ="Compile un site statique")
 
-@BenchmarkMode(Mode.AverageTime)
-@OutputTimeUnit(TimeUnit.NANOSECONDS)
-@State(Scope.Benchmark)
 public class Build implements Callable<Integer> {
 
     @CommandLine.Option(names = "-d", description = "Répertoire du site statique")
     private File siteDir;
 
-    @Benchmark
     @Override
     public Integer call() throws IOException {
         if(siteDir != null){

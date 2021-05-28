@@ -3,10 +3,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.*;
+import org.openjdk.jmh.annotations.*;
 import picocli.CommandLine;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class BuildTest {
@@ -16,7 +19,7 @@ public class BuildTest {
      * Création d'un répertoire test
      */
     @BeforeAll
-    static void createRepertoryTest() throws Exception {
+    public static void createRepertoryTest() throws Exception {
         try {
             int exitCode = new CommandLine(new Init()).execute("-d", "test_build");
             assertEquals(exitCode, 0);
@@ -69,7 +72,7 @@ public class BuildTest {
      * afin de ne pas surcharger le projet
      */
     @AfterAll
-    static void cleanRepertoryTest(){
+    public static void cleanRepertoryTest(){
         File dir = new File(DIR_TO_BUILD);
         try {
             FileUtils.deleteDirectory(dir);
