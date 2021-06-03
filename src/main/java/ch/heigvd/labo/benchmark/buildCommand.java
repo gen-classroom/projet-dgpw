@@ -18,21 +18,30 @@ public class buildCommand {
 
     static final String DIR_TO_BUILD = "www/test_benchmark";
 
-    @Benchmark
-    public static void benchmarkingBuild(){
+    @Setup
+    public static void setUp() throws IOException {
         File dir = new File(DIR_TO_BUILD);
-        try {
-            // init a directory
-            new CommandLine(new Init()).execute("-d", "test_benchmark");
-            // create a page
-            new CommandLine(new New()).execute("-f", "mapremierepage", "-d" , "test_benchmark");
-            // build the website
-            new CommandLine(new Build()).execute("-d", "test_benchmark");
-            // remove everything
-            FileUtils.deleteDirectory(dir);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+        initializing();
+        gettingNewPage();
+        building();
     }
+
+    public static void initializing(){
+        // init a directory
+        new CommandLine(new Init()).execute("-d", "test_benchmark");
+    }
+
+    public static void gettingNewPage(){
+        // create a page
+        new CommandLine(new New()).execute("-f", "mapremierepage", "-d", "test_benchmark");
+    }
+
+    @Benchmark
+    public static void building(){
+        // build the website
+        new CommandLine(new Build()).execute("-d", "test_benchmark");
+    }
+
+
+
 }

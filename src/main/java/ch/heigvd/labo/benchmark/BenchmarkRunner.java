@@ -8,7 +8,7 @@ public class BenchmarkRunner {
     public static void main(String[] args) throws Exception {
         Options options = new OptionsBuilder()
                 .forks(1)
-               // .warmupIterations(1)
+                .warmupIterations(1)
                 .measurementIterations(1)
                 .build();
 
