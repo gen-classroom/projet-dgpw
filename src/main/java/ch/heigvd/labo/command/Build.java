@@ -9,6 +9,7 @@ import java.nio.file.Paths;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 import ch.heigvd.labo.Utility;
 import ch.heigvd.labo.fileWatcher.FileWatcher;
@@ -18,6 +19,7 @@ import com.github.jknack.handlebars.io.FileTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.openjdk.jmh.annotations.*;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
@@ -27,10 +29,12 @@ import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
 
 @Command(name = "build", description ="Compile un site statique")
+
 public class Build implements Callable<Integer> {
 
     @CommandLine.Option(names = "-d", description = "Répertoire du site statique")
     private File siteDir;
+
 
     @CommandLine.Option(names = "--watch", description = "Contrôle continu")
     private boolean watch;
