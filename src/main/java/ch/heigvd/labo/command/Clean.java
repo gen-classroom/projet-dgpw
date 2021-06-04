@@ -19,11 +19,6 @@ public class Clean implements Callable<Integer> {
     @Override public Integer call() throws IOException{
         File dirS = new File(DIR_ROOT + dir.getPath());
         System.out.println(dirS);
-        //Vérifie que le répertoire est renseigné
-        if(dirS == null) {
-            System.out.println("Merci de renseigner le nom du répertoire à créer : \n-d [nom du répertoire]");
-            return 1;
-        }
 
         //Vérifie que le répertoire du site est existant
         if (!dirS.exists()) {
