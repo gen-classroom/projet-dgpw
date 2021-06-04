@@ -1,14 +1,18 @@
 package ch.heigvd.labo.command;
+
 import static ch.heigvd.labo.Utility.*;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
+import ch.heigvd.labo.Utility;
+import ch.heigvd.labo.fileWatcher.FileWatcher;
 import com.github.jknack.handlebars.*;
 import com.github.jknack.handlebars.context.MapValueResolver;
 import com.github.jknack.handlebars.io.FileTemplateLoader;
@@ -31,57 +35,115 @@ public class Build implements Callable<Integer> {
     @CommandLine.Option(names = "-d", description = "Répertoire du site statique")
     private File siteDir;
 
-    @Override
-    public Integer call() throws IOException {
-        if(siteDir != null){
-            File dir = new File(DIR_ROOT + siteDir.getPath());
 
-            // Vérifie que le répertoire du site est existant
-            if (!dir.exists()) {
-                System.out.format("Impossible d'accéder au répertoire %s. Celui-ci est inexistant.\n", dir.getName());
-                return 1;
-            }
+    @CommandLine.Option(names = "--watch", description = "Contrôle continu")
+    private boolean watch;
 
-            File dirBuild = new File(dir.getAbsolutePath() + "/build");
-            // Teste si le repertoire build existe déjà et le supprime
-            if (dirBuild.exists()){
-                // Appel fonction clean
-                new CommandLine(new Clean()).execute("-d", siteDir.getPath());
-            }
+    @Override public Integer call() throws IOException {
+        if(siteDir == null) {
+            System.out.println("Merci de renseigner le nom du répertoire à créer : \n-d [nom du répertoire]");
+            return 1;
+        }
 
+        File dir = new File(DIR_ROOT + siteDir.getPath());
+        // Vérifie que le répertoire du site est existant
+        if (!dir.exists()) {
+            System.out.format("Impossible d'accéder au répertoire %s. Celui-ci est inexistant.\n", dir.getName());
+            return 1;
+        }
+
+        File dirBuild = new File(dir.getAbsolutePath() + "/build");
+
+        // Teste si le repertoire build existe déjà et le supprime
+        if (dirBuild.exists()) {
+            // Appel fonction clean
+            new CommandLine(new Clean()).execute("-d", siteDir.getPath());
+        }
+        else{
             // Création du répertoire "template" pour y insérer les fichiers .html
             try {
                 FileUtils.copyDirectoryToDirectory(new File("src/main/resources"), dir);
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
 
-            boolean creationBuild = dirBuild.mkdir();
-            // Teste si le répertoire build s'est bien créé
-            if(!creationBuild){
-                System.out.format("Le répertoire build ne s'est pas créé.");
-                return 1;
-            } else {
-                // Création des menus pour les fichiers de metadonnee et le fichier index
-                boolean menu = this.configMenu(dir, "/resources/menu.html");
-                if (!menu) return 1;
-                boolean menuIndex = this.configMenu(dir, "/resources/menuIndex.html");
-                if(!menuIndex) return 1;
+        dirBuild.mkdir();
 
-                // Création de la structure build
-                boolean creationStructure = this.listDirectory(dir, dirBuild);
-                // Teste si la structure a pu être recréée
-                if (!creationStructure){
-                    System.out.format("La structure n'a pas pu être créée correctement.");
-                    return 1;
+        // Appel de la classe pour observer modifications sur système de fichiers
+        //FileWatcher fileWatcher = new FileWatcher(siteDir + "/metadonnee");
+        // Si le paramètre --watch est ajouté
+        if(watch){
+            Path path = Paths.get(dir.getPath());
+            FileWatcher fw = new FileWatcher(path);
+            int haveEvent = 0;
+            while(true) {
+                haveEvent = fw.processEvents();
+
+                // Lorsqu'un fichier a été créé ou supprimé
+                if(haveEvent == CREATE || haveEvent == DELETE){
+                    updateMenu(dir);
+                    buildFile(dirBuild, dir);
+                }
+
+                // Lorsqu'un contenu de fichier est modifié
+                if(haveEvent == MODIFY) {
+                    buildFile(dirBuild, dir);
                 }
             }
-            System.out.format("Compilation terminée !\n");
-            return 0;
-        } else {
-            System.out.println("Merci de renseigner le nom du répertoire à créer : \n-d [nom du répertoire]");
+        }
+        else {
+            // Build normal
+            updateMenu(dir);
+            return buildFile(dirBuild, dir);
+        }
+    }
+
+    /**
+     * Fonction qui effectue le build
+     * @param dirBuild Répertoire build du site statique
+     * @param dir Répertoire actuel
+     * @return Retourne 1 s'il y a eu une erreur dans l'exécution
+     */
+    private int buildFile(File dirBuild, File dir){
+        try {
+            // Création de la structure build
+            boolean creationStructure = this.listDirectory(dir, dirBuild);
+            // Teste si la structure a pu être recréée
+            if (!creationStructure) {
+                System.out.format("La structure n'a pas pu être créée correctement.");
+                return 1;
+            }
+        } catch(IOException e){
+            e.printStackTrace();
             return 1;
         }
+
+        System.out.format("Build - Compilation terminée !\n");
+        return 0;
+
+    }
+
+    /**
+     * Fonction qui permet de mettre à jours les menus.html
+     * @param dir Répertoire actuel
+     * @return Retourne 1 s'il y a eu une erreur dans l'exécution
+     */
+    private int updateMenu(File dir){
+        try{
+            // Création des menus pour les fichiers de metadonnee et le fichier index
+            FileUtils.copyDirectoryToDirectory(new File("src/main/resources"), dir);
+
+            // Ajout les liens des pages html
+            boolean menu = configMenu(dir, "/resources/","menu.html");
+            if (!menu) return 1;
+            boolean menuIndex = configMenu(dir, "/resources/","menuIndex.html");
+            if (!menuIndex) return 1;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 
     /**
@@ -91,8 +153,8 @@ public class Build implements Callable<Integer> {
      * @return Retourne vrai si il a été possible de créé menu.html
      * @throws IOException
      */
-    private boolean configMenu(File dir, String pathMenu) throws IOException {
-        File menuFile = new File(dir + pathMenu);
+    private boolean configMenu(File dir, String pathMenu, String name) throws IOException {
+        File menuFile = new File(dir + pathMenu+name);
 
         boolean menu = this.constructMenu(dir, menuFile);
         // Teste si le menu a pu être créé
@@ -106,6 +168,7 @@ public class Build implements Callable<Integer> {
         writer.write("</ul>\n");
         writer.flush();
         writer.close();
+
         return true;
     }
 
@@ -163,29 +226,36 @@ public class Build implements Callable<Integer> {
                 // Création des répertoires
                 if (file.isDirectory() && !fileName.equals("build") && !fileName.equals("resources")) {
                     String dirName = fileName;
-                    System.out.print("Creation " + dirName + ": ");
 
                     File dirBuild = new File(build.getAbsolutePath() + "/" + dirName);
-                    boolean creationDir = dirBuild.mkdir();
-                    if (!creationDir) {
-                        System.out.println("Echec");
-                        return false;
+
+                    if(!dirBuild.exists()){
+                        boolean creationDir = dirBuild.mkdir();
+                        if (!creationDir) {
+                            System.out.println("Echec de création du répertoire build");
+                            return false;
+                        }
                     }
 
-                    System.out.println("Reussi");
                     File newRoot = new File(root.getAbsolutePath() + "/" + dirName);
                     this.listDirectory(newRoot, dirBuild);
                     // Conversion des fichiers md en html
                 } else if (FilenameUtils.getExtension(fileName).equals("md")) {
                     System.out.print("Conversion " + fileName + ": ");
                     File htmlFile = new File(build.getAbsolutePath() + "/" + fileName.substring(0, file.getName().length() - 3) + ".html");
+
                     // Création du fichier html
-                    if (!htmlFile.createNewFile()) {
-                        System.out.println("Echec");
-                        return false;
+                    if(htmlFile.exists()){
+                        if(!htmlFile.delete()){
+                            System.out.println("Echec de suppression du fichier html");
+                            return false;
+                        }
                     }
 
-                    System.out.println("Reussi");
+                    if (!htmlFile.createNewFile()) {
+                        System.out.println("Echec de création du fichier html");
+                        return false;
+                    }
 
                     // Appel à HandleBars pour le générateur de template
                     boolean handlebars = handleBars(file, htmlFile);
@@ -195,11 +265,9 @@ public class Build implements Callable<Integer> {
                     }
 
                     // Copie des autres fichiers (image par exemple)
-                } else if (!FilenameUtils.getExtension(fileName).equals("yaml") && !fileName.equals("build") && !fileName.equals("resources")) {
-                    System.out.println("Copie " + fileName + ": ");
+                } else if (!FilenameUtils.getExtension(fileName).equals("yaml") && !fileName.equals("build") && !fileName.equals("resources") && !fileName.endsWith("~")) {
                     File newFile = new File(build.getAbsolutePath() + "/" + fileName);
                     FileUtils.copyFile(file, newFile);
-                    System.out.println("Reussi");
                 }
             }
         } else {

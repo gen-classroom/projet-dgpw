@@ -20,9 +20,9 @@ public class CleanTest {
     @BeforeAll
     static void createRepertoryTest() throws Exception{
         int exitCode = new CommandLine(new EasyUse()).execute("-init", "-d", "test_clean");
-        File dir = new File("www/" + DIR_SITE_TEST + "/build");
+        File dirBuild = new File("www/" + DIR_SITE_TEST + "/build");
         try {
-            if (!dir.exists()) {
+            if (!dirBuild.exists()) {
                 throw new IOException("Impossible de créer le répertoire");
             }
         } catch (IOException e) {

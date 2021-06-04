@@ -28,6 +28,9 @@ public final class Utility {
     public static final String DIR_ROOT = "www/";
     public static final String DIR_BUILD = "/build";
     public static final String DIR_METADATA = "/metadonnee";
-    public static final String DIR_RESOURCES = "/resources";
+    public static final String DIR_RESOURCES = "/resources/";
     public static final String LOCALHOST = "http://localhost:63342/my-app/";
+    public static final int MODIFY = 1;
+    public static final int CREATE = 2;
+    public static final int DELETE = 3;
 }

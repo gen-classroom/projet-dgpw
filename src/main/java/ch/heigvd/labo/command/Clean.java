@@ -40,17 +40,9 @@ public class Clean implements Callable<Integer> {
             return 2;
         }
 
-        //Vérifie que le répertoire resources a supprimé est existant
-        if(!dirToRemoveResources.exists()){
-            System.out.format("Impossible de supprimer %s. Celui-ci est inexistant.\n",dirToRemoveResources.getName());
-            return 2;
-        }
-
-
         //Supprime le répertoire récursivement
         try {
             FileUtils.deleteDirectory(dirToRemoveBuild);
-            FileUtils.deleteDirectory(dirToRemoveResources);
         } catch (IOException e) {
             e.printStackTrace();
         }
