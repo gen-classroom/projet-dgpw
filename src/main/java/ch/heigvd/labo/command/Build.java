@@ -68,7 +68,7 @@ public class Build implements Callable<Integer> {
         //FileWatcher fileWatcher = new FileWatcher(siteDir + "/metadonnee");
         // Si le paramètre --watch est ajouté
         if(watch){
-            Path path = Paths.get(dir.getPath() + "/metadonnee");
+            Path path = Paths.get(dir.getPath());
             FileWatcher fw = new FileWatcher(path);
             int haveEvent = 0;
             int count = 0;
@@ -281,7 +281,7 @@ public class Build implements Callable<Integer> {
                     }
 
                     // Copie des autres fichiers (image par exemple)
-                } else if (!FilenameUtils.getExtension(fileName).equals("yaml") && !fileName.equals("build") && !fileName.equals("resources")) {
+                } else if (!FilenameUtils.getExtension(fileName).equals("yaml") && !fileName.equals("build") && !fileName.equals("resources") && !fileName.endsWith("~")) {
                     System.out.println("Copie " + fileName + ": ");
                     File newFile = new File(build.getAbsolutePath() + "/" + fileName);
                     FileUtils.copyFile(file, newFile);
