@@ -4,6 +4,7 @@ import static ch.heigvd.labo.Utility.*;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.HashMap;
@@ -29,7 +30,7 @@ public class Build implements Callable<Integer> {
     @CommandLine.Option(names = "-d", description = "Répertoire du site statique")
     private File siteDir;
 
-    @CommandLine.Option(names = "--watch", description = "Contrôle continue")
+    @CommandLine.Option(names = "--watch", description = "Contrôle continu")
     private boolean watch;
 
     @Override public Integer call() throws IOException {
@@ -46,11 +47,15 @@ public class Build implements Callable<Integer> {
         }
 
         File dirBuild = new File(dir.getAbsolutePath() + "/build");
+
         // Teste si le repertoire build existe déjà et le supprime
         if (dirBuild.exists()) {
             // Appel fonction clean
+            System.out.println("JE SUIS LA");
             new CommandLine(new Clean()).execute("-d", siteDir.getPath());
         }
+
+        dirBuild.mkdir();
 
         // Création du répertoire "template" pour y insérer les fichiers .html
         try {
@@ -63,36 +68,51 @@ public class Build implements Callable<Integer> {
         //FileWatcher fileWatcher = new FileWatcher(siteDir + "/metadonnee");
         // Si le paramètre --watch est ajouté
         if(watch){
-            //while(fileWatcher.watch())
-                buibuild(dirBuild, dir);
+            Path path = Paths.get(dir.getPath());
+            FileWatcher fw = new FileWatcher(path);
+            boolean haveEvent = false;
+            int count = 0;
+            while(count < 10) {
+                haveEvent = fw.processEvents();
+                if(haveEvent) {
+                    buibuild(dirBuild, dir);
+                    count++;
+                }
+            }
+            return 0;
         }
         else {
+            return buibuild(dirBuild, dir);
         }
-        return buibuild(dirBuild, dir);
-
+        //return 0;
     }
 
     private int buibuild(File dirBuild, File dir){
-        boolean creationBuild = dirBuild.mkdir();
+        //boolean creationBuild = dirBuild.mkdir();
         // Teste si le répertoire build s'est bien créé
-        if(!creationBuild){
+        /*if(!creationBuild){
             System.out.format("Le répertoire build ne s'est pas créé.");
             return 1;
-        } else {
+        } else {*/
+        try {
             // Création des menus pour les fichiers de metadonnee et le fichier index
-            /*boolean menu = this.configMenu(dir, "/resources/menu.html");
+            boolean menu = this.configMenu(dir, "/resources/menu.html");
             if (!menu) return 1;
             boolean menuIndex = this.configMenu(dir, "/resources/menuIndex.html");
-            if(!menuIndex) return 1;
+            if (!menuIndex) return 1;
 
             // Création de la structure build
             boolean creationStructure = this.listDirectory(dir, dirBuild);
             // Teste si la structure a pu être recréée
-            if (!creationStructure){
+            if (!creationStructure) {
                 System.out.format("La structure n'a pas pu être créée correctement.");
                 return 1;
-            }*/
+            }
+        } catch(IOException e){
+            e.printStackTrace();
+            return 1;
         }
+        //}
         System.out.format("Compilation terminée !\n");
         return 0;
 
@@ -180,10 +200,13 @@ public class Build implements Callable<Integer> {
                     System.out.print("Creation " + dirName + ": ");
 
                     File dirBuild = new File(build.getAbsolutePath() + "/" + dirName);
-                    boolean creationDir = dirBuild.mkdir();
-                    if (!creationDir) {
-                        System.out.println("Echec");
-                        return false;
+
+                    if(!dirBuild.exists()){
+                        boolean creationDir = dirBuild.mkdir();
+                        if (!creationDir) {
+                            System.out.println("Echec");
+                            return false;
+                        }
                     }
 
                     System.out.println("Reussi");
@@ -193,7 +216,15 @@ public class Build implements Callable<Integer> {
                 } else if (FilenameUtils.getExtension(fileName).equals("md")) {
                     System.out.print("Conversion " + fileName + ": ");
                     File htmlFile = new File(build.getAbsolutePath() + "/" + fileName.substring(0, file.getName().length() - 3) + ".html");
+
                     // Création du fichier html
+                    if(htmlFile.exists()){
+                        if(!htmlFile.delete()){
+                            System.out.println("Echec");
+                            return false;
+                        }
+                    }
+
                     if (!htmlFile.createNewFile()) {
                         System.out.println("Echec");
                         return false;

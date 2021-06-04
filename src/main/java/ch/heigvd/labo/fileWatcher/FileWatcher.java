@@ -15,7 +15,7 @@ public class FileWatcher {
     /**
      * Creates a WatchService and registers the given directory
      */
-    FileWatcher(Path dir) throws IOException {
+    public FileWatcher(Path dir) throws IOException {
         this.watcher = FileSystems.getDefault().newWatchService();
         this.keys = new HashMap<WatchKey, Path>();
 
@@ -52,21 +52,22 @@ public class FileWatcher {
     /**
      * Process all events for keys queued to the watcher
      */
-    void processEvents() {
-        for (;;) {
+    public boolean processEvents() {
+        //while (true) {
 
             // wait for key to be signalled
             WatchKey key;
             try {
                 key = watcher.take();
-            } catch (InterruptedException x) {
-                return;
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                return false;
             }
 
             Path dir = keys.get(key);
             if (dir == null) {
                 System.err.println("WatchKey not recognized!!");
-                continue;
+                return false;//continue;
             }
 
             for (WatchEvent<?> event : key.pollEvents()) {
@@ -80,6 +81,15 @@ public class FileWatcher {
 
                 // print out event
                 System.out.format("%s: %s\n", event.kind().name(), child);
+                if(child.getFileName().endsWith(".md~")|| child.getFileName().endsWith(".md")){
+                    return true;
+                }
+
+
+                /*if(event.kind() == StandardWatchEventKinds.ENTRY_MODIFY){
+                    System.out.println("changement cc");
+                    return true;
+                }*/
 
                 // if directory is created, and watching recursively, then register it and its sub-directories
                 if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
@@ -100,16 +110,17 @@ public class FileWatcher {
 
                 // all directories are inaccessible
                 if (keys.isEmpty()) {
-                    break;
+                    return false; //break;
                 }
             }
-        }
+       // }
+        return true;
     }
 
-    public static void main(String[] args) throws IOException {
+    /*public static void main(String[] args) throws IOException {
         Path dir = Paths.get("www/mon/site");
         new FileWatcher(dir).processEvents();
-    }
+    }*/
 }
 
 /*public class FileWatcher {

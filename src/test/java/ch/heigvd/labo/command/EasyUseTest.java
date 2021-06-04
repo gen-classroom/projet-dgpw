@@ -12,7 +12,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class EasyUseTest {
-
+/*
     @Test
     @Order(1)
     void shouldCreateErrorNoArgument() throws Exception {
@@ -81,13 +81,13 @@ public class EasyUseTest {
         assertThrows(Exception.class, () -> {
             throw new Exception();
         });
-    }
+    }*/
 
     /**
      * Après que tous les tests aient été effectués, on nettoie tout le répertoire test
      * -> www/mon/site/mapremierepage.md
      */
-    @AfterAll
+   /* @AfterAll
     static void cleanRepertoryTest() {
         File dir = new File("www/test_easyuse");
         try {
@@ -95,6 +95,6 @@ public class EasyUseTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
 }
