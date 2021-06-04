@@ -22,9 +22,6 @@ public class EasyUse implements Callable {
     @CommandLine.Option(names = "-d", description = "Répertoire du site statique")
     private File dirStatic;
 
-    @CommandLine.Option(names = "--watch", description = "Contrôle continu")
-    private boolean watch;
-
     @Override public Integer call(){
         int result = 0;
         if(dirStatic != null) {
@@ -52,12 +49,7 @@ public class EasyUse implements Callable {
                 }
             }
 
-            if(watch){
-                result = new CommandLine(new Build()).execute("-d", dirStatic.getPath(), "--watch");
-            }
-            else{
-                result = new CommandLine(new Build()).execute("-d", dirStatic.getPath());
-            }
+            result = new CommandLine(new Build()).execute("-d", dirStatic.getPath());
 
             if(result != 0) {
                 System.out.println("Une erreur s'est produite durant le build");
