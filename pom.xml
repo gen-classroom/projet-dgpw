@@ -6,7 +6,7 @@
 
   <groupId>ch.heigvd</groupId>
   <artifactId>labo</artifactId>
-  <version>2.0.0-SNAPSHOT</version>
+  <version>3.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
   
   <name>DGPW</name>
