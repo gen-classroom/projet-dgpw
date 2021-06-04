@@ -303,6 +303,7 @@ public class Build implements Callable<Integer> {
                     map.put(s[0], s[1]);
                 }
             }
+            reader.close();
             if(header) {
                 map.put("content", String.valueOf(content));
             }
