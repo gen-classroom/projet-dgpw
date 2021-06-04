@@ -7,9 +7,9 @@ import org.openjdk.jmh.runner.options.OptionsBuilder;
 public class BenchmarkRunner {
     public static void main(String[] args) throws Exception {
         Options options = new OptionsBuilder()
-                .forks(1)
-                .warmupIterations(1)
-                .measurementIterations(1)
+                .forks(2)
+                .warmupIterations(5)
+                .measurementIterations(5)
                 .build();
 
         new Runner(options).run();
