@@ -68,20 +68,61 @@ public class Build implements Callable<Integer> {
         //FileWatcher fileWatcher = new FileWatcher(siteDir + "/metadonnee");
         // Si le paramètre --watch est ajouté
         if(watch){
-            Path path = Paths.get(dir.getPath());
+            Path path = Paths.get(dir.getPath() + "/metadonnee");
             FileWatcher fw = new FileWatcher(path);
-            boolean haveEvent = false;
+            int haveEvent = 0;
             int count = 0;
             while(count < 10) {
+                System.out.println("changement null : " + haveEvent);
                 haveEvent = fw.processEvents();
-                if(haveEvent) {
+
+                if(haveEvent == 3){
+                    System.out.println("changement 3");
+                    // Création du répertoire "template" pour y insérer les fichiers .html
+                    try {
+                        FileUtils.copyDirectoryToDirectory(new File("src/main/resources"), dir);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    // Création des menus pour les fichiers de metadonnee et le fichier index
+                    boolean menu = this.configMenu(dir, "/resources/menu.html");
+                    if (!menu) return 1;
+                    boolean menuIndex = this.configMenu(dir, "/resources/menuIndex.html");
+                    if (!menuIndex) return 1;
+
                     buibuild(dirBuild, dir);
                     count++;
                 }
+
+                if(haveEvent == 2){
+                    System.out.println("changement 2");
+                    // Création des menus pour les fichiers de metadonnee et le fichier index
+                    boolean menu = this.configMenu(dir, "/resources/menu.html");
+                    if (!menu) return 1;
+                    boolean menuIndex = this.configMenu(dir, "/resources/menuIndex.html");
+                    if (!menuIndex) return 1;
+
+                    buibuild(dirBuild, dir);
+                    count++;
+                }
+
+                if(haveEvent == 1) {
+                    System.out.println("changement 1");
+                    buibuild(dirBuild, dir);
+                    count++;
+                }
+
             }
             return 0;
         }
         else {
+            // Création des menus pour les fichiers de metadonnee et le fichier index
+            boolean menu = this.configMenu(dir, "/resources/menu.html");
+            if (!menu) return 1;
+            boolean menuIndex = this.configMenu(dir, "/resources/menuIndex.html");
+            if (!menuIndex) return 1;
+
             return buibuild(dirBuild, dir);
         }
         //return 0;
@@ -96,10 +137,10 @@ public class Build implements Callable<Integer> {
         } else {*/
         try {
             // Création des menus pour les fichiers de metadonnee et le fichier index
-            boolean menu = this.configMenu(dir, "/resources/menu.html");
+           /* boolean menu = this.configMenu(dir, "/resources/menu.html");
             if (!menu) return 1;
             boolean menuIndex = this.configMenu(dir, "/resources/menuIndex.html");
-            if (!menuIndex) return 1;
+            if (!menuIndex) return 1;*/
 
             // Création de la structure build
             boolean creationStructure = this.listDirectory(dir, dirBuild);

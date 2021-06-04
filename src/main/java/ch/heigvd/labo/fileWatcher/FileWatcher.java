@@ -52,7 +52,7 @@ public class FileWatcher {
     /**
      * Process all events for keys queued to the watcher
      */
-    public boolean processEvents() {
+    public int processEvents() {
         //while (true) {
 
             // wait for key to be signalled
@@ -61,13 +61,13 @@ public class FileWatcher {
                 key = watcher.take();
             } catch (InterruptedException e) {
                 e.printStackTrace();
-                return false;
+                return 0;
             }
 
             Path dir = keys.get(key);
             if (dir == null) {
                 System.err.println("WatchKey not recognized!!");
-                return false;//continue;
+                return 0;//continue;
             }
 
             for (WatchEvent<?> event : key.pollEvents()) {
@@ -81,15 +81,37 @@ public class FileWatcher {
 
                 // print out event
                 System.out.format("%s: %s\n", event.kind().name(), child);
-                if(child.getFileName().endsWith(".md~")|| child.getFileName().endsWith(".md")){
-                    return true;
+                System.out.println("FILE NAME" + child.getFileName());
+                String fileTest =child.toString();
+                if( fileTest.endsWith(".md")){
+                    System.out.println("HELLO");
+
+                    // reset key and remove from set if directory no longer accessible
+                    boolean valid = key.reset();
+                    if (!valid) {
+                        keys.remove(key);
+
+                        // all directories are inaccessible
+                        if (keys.isEmpty()) {
+                            return 0; //break;
+                        }
+                    }
+
+                    if(event.kind() == StandardWatchEventKinds.ENTRY_MODIFY){
+                        System.out.println("changement cc");
+                        return 1;
+                    }
+
+                    if(event.kind() == StandardWatchEventKinds.ENTRY_CREATE){
+                        System.out.println("suppression ou création cc");
+                        return 2;
+                    }
+
+                    if(event.kind() == StandardWatchEventKinds.ENTRY_DELETE){
+                        System.out.println("suppression ou création cc");
+                        return 3;
+                    }
                 }
-
-
-                /*if(event.kind() == StandardWatchEventKinds.ENTRY_MODIFY){
-                    System.out.println("changement cc");
-                    return true;
-                }*/
 
                 // if directory is created, and watching recursively, then register it and its sub-directories
                 if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
@@ -102,19 +124,8 @@ public class FileWatcher {
                     }
                 }
             }
-
-            // reset key and remove from set if directory no longer accessible
-            boolean valid = key.reset();
-            if (!valid) {
-                keys.remove(key);
-
-                // all directories are inaccessible
-                if (keys.isEmpty()) {
-                    return false; //break;
-                }
-            }
        // }
-        return true;
+        return 0;
     }
 
     /*public static void main(String[] args) throws IOException {
