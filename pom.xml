@@ -105,6 +105,7 @@
         <directory>src/main/resources</directory>
       </resource>
     </resources>
+
   </build>
 
   <reporting>
@@ -161,6 +162,18 @@
       <artifactId>handlebars</artifactId>
       <version>4.2.0</version>
     </dependency>
+
+    <dependency>
+      <groupId>org.openjdk.jmh</groupId>
+      <artifactId>jmh-core</artifactId>
+      <version>1.31</version>
+    </dependency>
+    <dependency>
+      <groupId>org.openjdk.jmh</groupId>
+      <artifactId>jmh-generator-annprocess</artifactId>
+      <version>1.31</version>
+    </dependency>
+
   </dependencies>
 
 </project>

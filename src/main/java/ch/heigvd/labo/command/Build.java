@@ -7,6 +7,7 @@ import java.nio.file.Path;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 import com.github.jknack.handlebars.*;
 import com.github.jknack.handlebars.context.MapValueResolver;
@@ -14,6 +15,7 @@ import com.github.jknack.handlebars.io.FileTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.openjdk.jmh.annotations.*;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
@@ -23,12 +25,14 @@ import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
 
 @Command(name = "build", description ="Compile un site statique")
+
 public class Build implements Callable<Integer> {
 
     @CommandLine.Option(names = "-d", description = "Répertoire du site statique")
     private File siteDir;
 
-    @Override public Integer call() throws IOException {
+    @Override
+    public Integer call() throws IOException {
         if(siteDir != null){
             File dir = new File(DIR_ROOT + siteDir.getPath());
 
