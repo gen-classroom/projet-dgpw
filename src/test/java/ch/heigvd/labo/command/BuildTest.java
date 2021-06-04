@@ -15,7 +15,7 @@ public class BuildTest {
     /**
      * Création d'un répertoire test
      */
-  /*  @BeforeAll
+    @BeforeAll
     static void createRepertoryTest() throws Exception {
         try {
             int exitCode = new CommandLine(new Init()).execute("-d", "test_build");
@@ -36,12 +36,12 @@ public class BuildTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }*/
+    }
 
     /**
      * Build d'un répertoire inexistant, retourne une erreur
      */
-    /*@Test
+    @Test
     @Order(1)
     public void shouldNotBuildInexistantRepertory() throws Exception{
         int exitCode = new CommandLine(new Build()).execute("-d", "test_build_inexistant");
@@ -49,12 +49,12 @@ public class BuildTest {
         assertThrows(IOException.class, () -> {
             throw new IOException("Le répertoire est inexistant");
         });
-    }*/
+    }
 
     /**
      * Build d'un répertoire existant
      */
-    /*@Test
+    @Test
     @Order(2)
     public void shouldBuildExistantRepertory() throws Exception{
         int exitCode = new CommandLine(new Build()).execute("-d", "test_build");
@@ -62,13 +62,13 @@ public class BuildTest {
         assertThrows(IOException.class, () -> {
             throw new IOException("Le répertoire est inexistant");
         });
-    }*/
+    }
 
     /**
      * Une fois les tests terminés, le répertoire servant de test est supprimé
      * afin de ne pas surcharger le projet
      */
-    /*@AfterAll
+    @AfterAll
     static void cleanRepertoryTest(){
         File dir = new File(DIR_TO_BUILD);
         try {
@@ -76,5 +76,5 @@ public class BuildTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }*/
+    }
 }
