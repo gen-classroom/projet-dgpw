@@ -1,5 +1,7 @@
 package ch.heigvd.labo.fileWatcher;
 
+import static ch.heigvd.labo.Utility.*;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
@@ -82,17 +84,17 @@ public class FileWatcher {
 
                     if(event.kind() == StandardWatchEventKinds.ENTRY_MODIFY){
                         System.out.println("changement cc");
-                        return 1;
+                        return MODIFY;
                     }
 
                     if(event.kind() == StandardWatchEventKinds.ENTRY_CREATE){
                         System.out.println("suppression ou création cc");
-                        return 2;
+                        return CREATE;
                     }
 
                     if(event.kind() == StandardWatchEventKinds.ENTRY_DELETE){
                         System.out.println("suppression ou création cc");
-                        return 3;
+                        return DELETE;
                     }
                 }
 
