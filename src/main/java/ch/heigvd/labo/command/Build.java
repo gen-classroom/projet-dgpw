@@ -54,15 +54,19 @@ public class Build implements Callable<Integer> {
             System.out.println("JE SUIS LA");
             new CommandLine(new Clean()).execute("-d", siteDir.getPath());
         }
+        else{
+            // Création du répertoire "template" pour y insérer les fichiers .html
+            try {
+                System.out.println("je m'auto delete");
+                FileUtils.copyDirectoryToDirectory(new File("src/main/resources"), dir);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
         dirBuild.mkdir();
 
-        // Création du répertoire "template" pour y insérer les fichiers .html
-        try {
-            FileUtils.copyDirectoryToDirectory(new File("src/main/resources"), dir);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
 
         // Appel de la classe pour observer modifications sur système de fichiers
         //FileWatcher fileWatcher = new FileWatcher(siteDir + "/metadonnee");
@@ -76,36 +80,17 @@ public class Build implements Callable<Integer> {
                 System.out.println("changement null : " + haveEvent);
                 haveEvent = fw.processEvents();
 
-                if(haveEvent == 3){
-                    System.out.println("changement 3");
-                    // Création du répertoire "template" pour y insérer les fichiers .html
-                    try {
-                        FileUtils.copyDirectoryToDirectory(new File("src/main/resources"), dir);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    // Création des menus pour les fichiers de metadonnee et le fichier index
-                    boolean menu = this.configMenu(dir, "/resources/menu.html");
-                    if (!menu) return 1;
-                    boolean menuIndex = this.configMenu(dir, "/resources/menuIndex.html");
-                    if (!menuIndex) return 1;
-
+                if(haveEvent == 3 || haveEvent == 2){
+                    updateMenu(dir);
                     buibuild(dirBuild, dir);
                     count++;
                 }
 
-                if(haveEvent == 2){
-                    System.out.println("changement 2");
-                    // Création des menus pour les fichiers de metadonnee et le fichier index
-                    boolean menu = this.configMenu(dir, "/resources/menu.html");
-                    if (!menu) return 1;
-                    boolean menuIndex = this.configMenu(dir, "/resources/menuIndex.html");
-                    if (!menuIndex) return 1;
-
+                /*if(haveEvent == 2){
+                    updateMenu(dir);
                     buibuild(dirBuild, dir);
                     count++;
-                }
+                }*/
 
                 if(haveEvent == 1) {
                     System.out.println("changement 1");
@@ -117,15 +102,33 @@ public class Build implements Callable<Integer> {
             return 0;
         }
         else {
-            // Création des menus pour les fichiers de metadonnee et le fichier index
-            boolean menu = this.configMenu(dir, "/resources/menu.html");
-            if (!menu) return 1;
-            boolean menuIndex = this.configMenu(dir, "/resources/menuIndex.html");
-            if (!menuIndex) return 1;
+            updateMenu(dir);
 
             return buibuild(dirBuild, dir);
         }
         //return 0;
+    }
+
+    /**
+     *
+     * @param dir
+     * @return
+     */
+    private int updateMenu(File dir){
+        try{
+            // Création des menus pour les fichiers de metadonnee et le fichier index
+            FileUtils.copyDirectoryToDirectory(new File("src/main/resources"), dir);
+
+            // Ajout les liens des pages html
+            boolean menu = configMenu(dir, "/resources/","menu.html");
+            if (!menu) return 1;
+            boolean menuIndex = configMenu(dir, "/resources/","menuIndex.html");
+            if (!menuIndex) return 1;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+            return 0;
     }
 
     private int buibuild(File dirBuild, File dir){
@@ -166,8 +169,8 @@ public class Build implements Callable<Integer> {
      * @return Retourne vrai si il a été possible de créé menu.html
      * @throws IOException
      */
-    private boolean configMenu(File dir, String pathMenu) throws IOException {
-        File menuFile = new File(dir + pathMenu);
+    private boolean configMenu(File dir, String pathMenu, String name) throws IOException {
+        File menuFile = new File(dir + pathMenu+name);
 
         boolean menu = this.constructMenu(dir, menuFile);
         // Teste si le menu a pu être créé
@@ -181,6 +184,8 @@ public class Build implements Callable<Integer> {
         writer.write("</ul>\n");
         writer.flush();
         writer.close();
+
+        //menuFile.renameTo(new File(dir + pathMenu+name));
         return true;
     }
 
