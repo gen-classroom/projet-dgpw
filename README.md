@@ -9,7 +9,9 @@
 **Etat du projet : En cours**
 
 ------
+
 ### Générer l'executable 
+
 Pour générer et unzip le projet :
 
 `````bash
@@ -39,9 +41,11 @@ Commands:
   init     Initialise un répertoire de site statique
   easyuse  Commande qui facilite l'utilisation du site
 ````
+
 ------
 
 ### Affichage Version
+
 Pour afficher la version, utiliser le paramètre `-v` ou `--version` :
 
 ````bash
@@ -60,12 +64,13 @@ DGPW version X.X.X-SNAPSHOT
 Nous avons décidé d'ajouter une commande qui réunisse toutes les commandes afin de faciliter l'utilisation de l'application; les deux commandes appellent directement la commande `build` afin de compiler le site statique.
 
 ````bash
-Usage: Main easyuse [-init] [-new] [-d=<dirStatic>] [-f=<filePage>]
+Usage: Main easyuse [-init] [-new] [--watch] [-d=<dirStatic>] [-f=<filePage>]
 Commande qui facilite l'utilisation du site
   -d=<dirStatic>    Répertoire du site statique
   -f=<filePage>     Nom de la page
       -init         Création du site statique
       -new          Création d'une nouvelle page
+      --watch       Contrôle continu
 ````
 
 Afin d'initialiser le site et directement le builder:
@@ -75,11 +80,9 @@ Afin d'initialiser le site et directement le builder:
 
 # Affichage
 Le répertoire a été créé
-Le fichier de config a été créé : /../../../../../projet-dgpw/www/test_unit/config.yaml
-Le fichier d'index a été créé : /../../../../../projet-dgpw/www/test_unit/index.md
-Conversion index.md: Reussi
-Creation metadonnee: Reussi
-Compilation terminée !
+Le fichier de config a été créé : /home/noemie/Documents/GEN/projet-dgpw/projet-dgpw/www/test_unit/config.yaml
+Le fichier d'index a été créé : /home/noemie/Documents/GEN/projet-dgpw/projet-dgpw/www/test_unit/index.md
+Conversion index.md: Build - Compilation terminée !
 ````
 
 Afin de créer une page et directement builder le site statique:
@@ -89,14 +92,24 @@ Afin de créer une page et directement builder le site statique:
 
 # Affichage
 La page voulue, new.md, a été créée
+www/test_unit
 Le répertoire build du site test_unit a été supprimé.
-Conversion index.md: Reussi
-Creation metadonnee: Reussi
-Conversion new.md: Reussi
-Compilation terminée !
+Conversion index.md: Conversion new.md: Build - Compilation terminée !
 ````
 
 > /!\ Le nom de la page ne doit pas avoir d'extension. 
+
+Pour activer la génération du site à la volée, nous avons ajouté une option pour le faire, qui va tourner en arrière plan:
+
+````bash
+> dgpw easyuse --watch -d mon/site
+````
+
+Ainsi pour ajouter une nouvelle page markdown, nous pouvons utiliser la commande `dgpw easyuse -new` ou sinon la commande `dgpw new`. Il est possible de modifier un fichier markdown, cependant il ne faut pas oublier d'effectuer `ctrl+s` pour sauver les modifications. Finalemenr, on peut également supprimer un fichier markdown.
+
+> /!\ Il est seulement possible d'utiliser cette commande avec des fichiers **markdown**
+
+Afin d'arrêter cette option, on peut effectuer la commande `ctrl+c` directement dans le terminal.
 
 ### Servir le site
 
@@ -137,6 +150,7 @@ Le répertoire a été créé
 Lors de l'initialisation du site statique, celui-ci est automatiquement créé dans le répertoire `www`. Lorsque l'utilisateur souhaite créer un dossier `/mon/site` par exemple, le répertoire se présentera ansi: `www/mon/site`.
 
 ### Ajouter une nouvelle page
+
 Pour créer une nouvelle page template, utiliser la commande `new`:
 
 ````bash
@@ -150,27 +164,45 @@ Création d'une nouvelle page
 # Affichage
 La page voulue, mapremierepage.md, a été créée
 ````
+
 >/!\ Le nom de la page ne doit pas avoir d'extension. 
 
 Pour ajouter une nouvelle page au site, le répertoire doit `OBLIGATOIREMENT` être dans le répertoire `www`. Si ce n'est pas le cas, une erreur sera retournée.
 
 ### Build le site Web (générer les pages HTML)
+
 Pour générer les pages HTML, utiliser la commande `build`:
+
 ```bash
-Usage: Main build [-d=<siteDir>]
+Usage: Main build [--watch] [-d=<siteDir>]
 Compile un site statique
   -d=<siteDir>    Répertoire du site statique
+      --watch     Contrôle continu
   
 > dgpw build -d test_init
 
 #Affichage
 Compilation terminée !
 ```
+
 > /!\ Si le répertoire du site Web contient deja un répertoire build, celui-ci sera supprimé et recréer d'après les fichiers présents dans le répertoire.g
 
 Pour générer les pages HTML du site, le répertoire doit `OBLIGATOIREMENT` être dans le répertoire `www`. Si ce n'est pas le cas, une erreur sera retournée.
 
+Nous avons ajouté une option à la commande afin de générer le site statique à la volée. Il est possible de le faire ainsi:
+
+````bash
+> dgpw build -d test_init --watch
+````
+
+Ainsi pour ajouter une nouvelle page markdown, nous pouvons utiliser la commande `dgpw easyuse -new` ou sinon la commande `dgpw new`. Il est possible de modifier un fichier markdown, cependant il ne faut pas oublier d'effectuer `ctrl+s` pour sauver les modifications. Finalemenr, on peut également supprimer un fichier markdown.
+
+> /!\ Il est seulement possible d'utiliser cette commande avec des fichiers **markdown**
+
+Afin d'arrêter cette option, on peut effectuer la commande `ctrl+c` directement dans le terminal.
+
 ### Nettoyer le site (répertoire build)
+
 Pour clean le site statique (supprimer le répertoire build), utiliser la commande `clean`:
 
 ```bash
