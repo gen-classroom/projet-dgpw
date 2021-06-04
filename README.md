@@ -32,11 +32,12 @@ Usage: Main [-v] [COMMAND]
 Programme DGPW - Website Generator
   -v, --version   Display the version and exit
 Commands:
-  new    Création d'une nouvelle page
-  clean  Nettoie le répertoire build du site statique.
-  build  Compile un site statique
-  serve  Compilation du site dans un navigateur Web
-  init   Initialise un répertoire de site statique
+  new      Création d'une nouvelle page
+  clean    Nettoie le répertoire build du site statique.
+  build    Compile un site statique
+  serve    Servir un site statique
+  init     Initialise un répertoire de site statique
+  easyuse  Commande qui facilite l'utilisation du site
 ````
 ------
 
@@ -54,23 +55,23 @@ Programme DGPW - Website Generator
 DGPW version X.X.X-SNAPSHOT
 ````
 
-### Servir le site
+### EasyUse
 
-Nous avons décidé d'ajouter une commande qui réunisse toutes les commandes; les deux commandes appellent directement la commande `build` afin de compiler le site statique et permettre l'accès via le navigateur. 
+Nous avons décidé d'ajouter une commande qui réunisse toutes les commandes afin de faciliter l'utilisation de l'application; les deux commandes appellent directement la commande `build` afin de compiler le site statique.
 
 ````bash
-Usage: Main serve [-init] [-new] [-d=<dirStatic>] [-f=<filePage>]
-Compilation du site dans un navigateur Web
+Usage: Main easyuse [-init] [-new] [-d=<dirStatic>] [-f=<filePage>]
+Commande qui facilite l'utilisation du site
   -d=<dirStatic>    Répertoire du site statique
   -f=<filePage>     Nom de la page
-      -init         Initialisation du site statique
-      -new          Création d'une page
+      -init         Création du site statique
+      -new          Création d'une nouvelle page
 ````
 
 Afin d'initialiser le site et directement le builder:
 
 ````bash
-> dgpw serve -init -d test_unit
+> dgpw easyuse -init -d test_unit
 
 # Affichage
 Le répertoire a été créé
@@ -79,13 +80,12 @@ Le fichier d'index a été créé : /../../../../../projet-dgpw/www/test_unit/in
 Conversion index.md: Reussi
 Creation metadonnee: Reussi
 Compilation terminée !
-Vous pouvez accéder au site web via http://localhost:63342/my-app/www/test_unit/build/index.html
 ````
 
 Afin de créer une page et directement builder le site statique:
 
 ````bash
-> dgpw serve -new -d test_unit -f new
+> dgpw easyuse -new -d test_unit -f new
 
 # Affichage
 La page voulue, new.md, a été créée
@@ -94,10 +94,26 @@ Conversion index.md: Reussi
 Creation metadonnee: Reussi
 Conversion new.md: Reussi
 Compilation terminée !
-Vous pouvez accéder au site web via http://localhost:63342/my-app/www/test_unit/build/index.html
 ````
 
 > /!\ Le nom de la page ne doit pas avoir d'extension. 
+
+### Servir le site
+
+Afin d'initialiser le serveur pour notre site statique, il est nécessaire de lancer une commande:
+
+````bash
+Usage: Main serve [-d=<dirStatic>]
+Servir un site statique
+  -d=<dirStatic>    Répertoire du site statique
+
+> dgpw serve -d test_init
+
+# Affichage
+Vous pouvez vous connectez sur votre site statique : http://localhost:8080/index.html
+````
+
+Une fois la commande lancée, vous pouvez visiter le site statique à l'adresse `http://localhost:8080/index.html`.
 
 ------
 
@@ -145,7 +161,7 @@ Usage: Main build [-d=<siteDir>]
 Compile un site statique
   -d=<siteDir>    Répertoire du site statique
   
-> dgpw build -d test-init
+> dgpw build -d test_init
 
 #Affichage
 Compilation terminée !

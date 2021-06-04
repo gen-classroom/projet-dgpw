@@ -7,6 +7,7 @@
   <groupId>ch.heigvd</groupId>
   <artifactId>labo</artifactId>
   <version>2.0.0-SNAPSHOT</version>
+  <packaging>jar</packaging>
   
   <name>DGPW</name>
 
@@ -77,6 +78,26 @@
         </configuration>
       </plugin>
 
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>0.8.7</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>report</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>report</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
     </plugins>
 
     <resources>
@@ -86,6 +107,22 @@
     </resources>
 
   </build>
+
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>3.0.1</version>
+        <configuration>
+          <stylesheetfile>${basedir}/src/main/javadoc/stylesheet.css</stylesheetfile>
+          <show>public</show>
+          <additionalOptions>-html4</additionalOptions>
+        </configuration>
+      </plugin>
+    </plugins>
+  </reporting>
+
 
   <dependencies>
     <dependency>
@@ -118,7 +155,7 @@
     <dependency>
       <groupId>org.commonmark</groupId>
       <artifactId>commonmark</artifactId>
-      <version>0.17.1</version>
+      <version>0.17.2</version>
     </dependency>
     <dependency>
       <groupId>com.github.jknack</groupId>
