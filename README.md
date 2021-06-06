@@ -4,27 +4,27 @@
 >
 > Auteurs : Dössegger Gwendoline, Gaudin Robin, Plancherel Noémie, Wojciechowski Cassandre
 >
-> Date : 05.03.2021 
+> Date : 05.06.2021 
 
-**Etat du projet : En cours**
+**Etat du projet : Terminé**
 
 ------
 
 ### Générer l'executable 
 
-Pour générer et unzip le projet :
+Pour générer et décompresser le projet :
 
 `````bash
 mvn clean install && rm -fr dgpw && unzip target/dgpw.zip
 `````
 
-Ajouter le répertoire `bin` à votre `Path`:
+Ajouter le répertoire `bin` au `Path`:
 
 ````
 export PATH=$PATH:`pwd`/dgpw/bin
 ````
 
-Executer `dgpw`:
+Exécuter `dgpw`:
 
 ````bash
 > dgpw
@@ -44,7 +44,7 @@ Commands:
 
 ------
 
-### Affichage Version
+### Affichage de la version
 
 Pour afficher la version, utiliser le paramètre `-v` ou `--version` :
 
@@ -61,7 +61,7 @@ DGPW version X.X.X-SNAPSHOT
 
 ### EasyUse
 
-Nous avons décidé d'ajouter une commande qui réunisse toutes les commandes afin de faciliter l'utilisation de l'application; les deux commandes appellent directement la commande `build` afin de compiler le site statique.
+Nous avons ajouté une commande qui réunit toutes les commandes afin de faciliter l'utilisation de l'application; les deux commandes appellent la commande `build` pour la compilation du site statique.
 
 ````bash
 Usage: Main easyuse [-init] [-new] [--watch] [-d=<dirStatic>] [-f=<filePage>]
@@ -73,7 +73,7 @@ Commande qui facilite l'utilisation du site
       --watch       Contrôle continu
 ````
 
-Afin d'initialiser le site et directement le builder:
+Afin d'initialiser le site et le compiler:
 
 ````bash
 > dgpw easyuse -init -d test_unit
@@ -85,7 +85,7 @@ Le fichier d'index a été créé : /home/noemie/Documents/GEN/projet-dgpw/proje
 Conversion index.md: Build - Compilation terminée !
 ````
 
-Afin de créer une page et directement builder le site statique:
+Afin de créer une page et compiler le site statique:
 
 ````bash
 > dgpw easyuse -new -d test_unit -f new
@@ -99,17 +99,17 @@ Conversion index.md: Conversion new.md: Build - Compilation terminée !
 
 > /!\ Le nom de la page ne doit pas avoir d'extension. 
 
-Pour activer la génération du site à la volée, nous avons ajouté une option pour le faire, qui va tourner en arrière plan:
+Pour activer la génération du site à la volée, nous avons ajouté une option pour le faire. Elle va tourner en arrière plan jusqu'à interruption du processus:
 
 ````bash
 > dgpw easyuse --watch -d mon/site
 ````
 
-Ainsi pour ajouter une nouvelle page markdown, nous pouvons utiliser la commande `dgpw easyuse -new` ou sinon la commande `dgpw new`. Il est possible de modifier un fichier markdown, cependant il ne faut pas oublier d'effectuer `ctrl+s` pour sauver les modifications. Finalemenr, on peut également supprimer un fichier markdown.
+Ainsi pour ajouter une nouvelle page markdown, nous pouvons utiliser la commande `dgpw easyuse -new` ou la commande `dgpw new`. Il est possible de modifier un fichier markdown, cependant il ne faut pas oublier d'effectuer `ctrl+s` pour sauver les modifications. Finalement, on peut aussi supprimer un fichier markdown.
 
 > /!\ Il est seulement possible d'utiliser cette commande avec des fichiers **markdown**
 
-Afin d'arrêter cette option, on peut effectuer la commande `ctrl+c` directement dans le terminal.
+Afin d'interrompre le processus, il faut effectuer la commande `ctrl+c` dans le terminal.
 
 ### Servir le site
 
@@ -126,11 +126,11 @@ Servir un site statique
 Vous pouvez vous connectez sur votre site statique : http://localhost:8080/index.html
 ````
 
-Une fois la commande lancée, vous pouvez visiter le site statique à l'adresse `http://localhost:8080/index.html`.
+Une fois la commande lancée, le site statique se visite à l'adresse `http://localhost:8080/index.html`.
 
 ------
 
-Si vous préférez effectuer les commandes une à une, il est également possible de le faire des manières suivantes:
+Si vous préférez effectuer les commandes une à une, il est également possible de le faire comme indiqué ci-après:
 
 ### Initialisation du site
 
@@ -185,7 +185,7 @@ Compile un site statique
 Compilation terminée !
 ```
 
-> /!\ Si le répertoire du site Web contient deja un répertoire build, celui-ci sera supprimé et recréer d'après les fichiers présents dans le répertoire.g
+> /!\ Si le répertoire du site Web contient deja un répertoire build, celui-ci sera supprimé et recréé d'après les fichiers présents dans le répertoire.
 
 Pour générer les pages HTML du site, le répertoire doit `OBLIGATOIREMENT` être dans le répertoire `www`. Si ce n'est pas le cas, une erreur sera retournée.
 
@@ -195,15 +195,15 @@ Nous avons ajouté une option à la commande afin de générer le site statique 
 > dgpw build -d test_init --watch
 ````
 
-Ainsi pour ajouter une nouvelle page markdown, nous pouvons utiliser la commande `dgpw easyuse -new` ou sinon la commande `dgpw new`. Il est possible de modifier un fichier markdown, cependant il ne faut pas oublier d'effectuer `ctrl+s` pour sauver les modifications. Finalemenr, on peut également supprimer un fichier markdown.
+Ainsi pour ajouter une nouvelle page markdown, nous pouvons utiliser la commande `dgpw easyuse -new` ou la commande `dgpw new`. Il est possible de modifier un fichier markdown, cependant il ne faut pas oublier d'effectuer `ctrl+s` pour sauver les modifications. Finalement, on peut supprimer un fichier markdown.
 
 > /!\ Il est seulement possible d'utiliser cette commande avec des fichiers **markdown**
 
-Afin d'arrêter cette option, on peut effectuer la commande `ctrl+c` directement dans le terminal.
+Afin d'arrêter le processus lancé par cette option, il faut effectuer la commande `ctrl+c` dans le terminal.
 
 ### Nettoyer le site (répertoire build)
 
-Pour clean le site statique (supprimer le répertoire build), utiliser la commande `clean`:
+Pour nettoyer le site statique (supprimer le répertoire `build`), utiliser la commande `clean`:
 
 ```bash
 Usage: Main clean [-d=<dir>]
@@ -216,4 +216,4 @@ Nettoie le répertoire build du site statique.
 le répertoire build a été supprimé.
 ```
 
-Pour que le site soit nettoyer, son répertoire doit `OBLIGATOIREMENT` être dans le répertoire `www`. Si ce n'est pas le cas, une erreur sera retournée.
+Pour que le site soit nettoyé, son répertoire doit `OBLIGATOIREMENT` être dans le répertoire `www`. Si ce n'est pas le cas, une erreur sera retournée.
